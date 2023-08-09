@@ -66,7 +66,7 @@ const passWord = ref('');
 const router = useRouter();
 
 const login = () => {
-    const requestData = {
+    const user = {
   userName: userName.value,
   passWord: passWord.value
 };
@@ -76,12 +76,17 @@ const login = () => {
   }
   };
   axios
-    .post('http://localhost:8080/user/login', requestData, config)
+    .post('http://localhost:8080/user/login', user, config)
     .then((res) => {
+      console.log(res);
         console.log(res.data);
       if (res.data.data === 'login success') {
+       
         router.push( 'userDetial' );
-      }
+      }else {
+             // 登录失败，可以弹出错误提示等
+             alert('Login failed: ' + res.data);
+         }
     })
     .catch((error) => {
         console.log(error.response.data.msg);
