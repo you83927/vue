@@ -65,32 +65,39 @@ const passWord = ref('');
 
 const router = useRouter();
 
-const login = () => {
+const login = async  () => {
     const user = {
   userName: userName.value,
   passWord: passWord.value
 };
-  const config = {
-        headers: {
-    'Content-Type': 'application/json'
+
+  try {
+  const response = await axios.post('http://localhost:8080/user/login', user, {withCredentials:true})
+  if (response.data.data === 'login success') {
+    // localStorage.setItem('user', JSON.stringify(user))
+    console.log(response);
+      router.push({ path: '/' });
+    } else {
+      alert('Login failed: ' + response.data);
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    alert('An error occurred during login.');
   }
-  };
-  axios
-    .post('http://localhost:8080/user/login', user, config)
-    .then((res) => {
-      console.log(res);
-        console.log(res.data);
-      if (res.data.data === 'login success') {
+    // .then((res) => {
+    //   console.log(res);
+    //     console.log(res.data);
+    //   if (res.data.data === 'login success') {
        
-        router.push( 'userDetial' );
-      }else {
-             // 登录失败，可以弹出错误提示等
-             alert('Login failed: ' + res.data);
-         }
-    })
-    .catch((error) => {
-        console.log(error.response.data.msg);
-    });
+    //     router.push( 'userDetial' );
+    //   }else {
+    //          // 登录失败，可以弹出错误提示等
+    //          alert('Login failed: ' + res.data);
+    //      }
+    // })
+    // .catch((error) => {
+    //     console.log(error.response.data.msg);
+    // });
 };
 </script>
 

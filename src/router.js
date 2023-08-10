@@ -1,10 +1,11 @@
 import {createRouter,createWebHistory} from "vue-router";
-import Home from "./views/Home.vue"
+import Home from "./views/Home.vue";
 import About from "./views/About.vue"
 import Contact from "./views/Contact.vue"
 import Products from "./views/Products.vue"
 import Login from "./views/Login.vue"
 import UserDetial from "./views/UserDetial.vue"
+import Follower from "./views/Follower.vue"
 
 
 const routers=[
@@ -39,7 +40,12 @@ const routers=[
         name:'UserDetial',
         component:UserDetial
     },
-    UserDetial
+    {
+        path:'/follower',
+        name:'Follower',
+        component:Follower
+    },
+    
 ]
 
 const router = createRouter({

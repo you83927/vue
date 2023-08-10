@@ -10,20 +10,15 @@
         <li class="nav-item">
           <router-link class="nav-link" to="/">Home</router-link>
         </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/about">About</router-link>
-        </li>
-        <li class="nav-item">
-            <router-link class="nav-link" to="/contact">Contact</router-link>
-        </li>
-        <li class="nav-item">
-            <router-link class="nav-link" to="/products">Products</router-link>
-        </li>
+
         <li class="nav-item">
             <router-link class="nav-link" to="/login">Login</router-link>
         </li>
         <li class="nav-item">
             <router-link class="nav-link" to="/userDetial">detial</router-link>
+        </li>
+        <li class="nav-item">
+            <router-link class="nav-link" to="/follower">follower</router-link>
         </li>
       </ul>
     </div>
