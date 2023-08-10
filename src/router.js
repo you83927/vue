@@ -6,6 +6,7 @@ import Products from "./views/Products.vue"
 import Login from "./views/Login.vue"
 import UserDetial from "./views/UserDetial.vue"
 import Follower from "./views/Follower.vue"
+import UserModify from "./views/UserModify.vue"
 
 
 const routers=[
@@ -44,6 +45,11 @@ const routers=[
         path:'/follower',
         name:'Follower',
         component:Follower
+    },
+    {
+        path:'/userModify',
+        name:'UserModify',
+        component:UserModify
     },
     
 ]

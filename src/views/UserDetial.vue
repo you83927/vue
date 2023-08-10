@@ -1,10 +1,15 @@
 <template>
+<h1>基本資料</h1>
+    <img :src="decodedPhoto" alt="User Photo" class="rounded mx-auto d-block" style="width: 8rem;border: 2px solid #000000;margin-top: 5px;">
+
    <ul class="list-group list-group-flush" v-if="user">
   <li class="list-group-item" >userName : {{ user.userName}}</li>
-  <li class="list-group-item">identity : {{ user.identity}}</li>
+  <li class="list-group-item">identity : {{ identityString}}</li>
   <li class="list-group-item">nickName : {{ user.nickName}}</li>
-  <li class="list-group-item">gender : {{ user.gender}}</li>
+  <li class="list-group-item">gender : {{ genderString}}</li>
   <li class="list-group-item">birthday : {{ user.birthday}}</li>
+  <li class="list-group-item">email : {{ user.email}}</li>
+
 </ul>
 <div v-else>
     Loading user data...
@@ -13,7 +18,7 @@
 </template>
     
 <script setup>
-    import { ref } from 'vue';
+    import { ref ,computed} from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
 
@@ -22,13 +27,17 @@ const URL = import.meta.env.VITE_API_JAVAURL
 
 const router = useRouter();
 
-const user = ref({});
+const user = ref({
+
+});
 console.log(user.userName);
   
 const fetchUserData = async () => {
 
   const response = await axios.get('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response.data.data
+
+    console.log( user.value.gender);
   console.log(response.data.data);
 //   user.value = response.data;
     
@@ -44,6 +53,35 @@ const fetchUserData = async () => {
 //     });
 };
 fetchUserData()
+
+const genderString = computed(() => {
+  if( user.value.gender===1){
+    return "男"
+  }
+  if( user.value.gender===2){
+    return "女"
+  }
+  if( user.value.gender===1){
+    return "其他"
+  }
+  
+});
+const identityString = computed(() => {
+  if( user.value.identity===0){
+    return "管理員"
+  }
+  if( user.value.identity===1){
+    return "普通會員"
+  }
+  if( user.value.identity===2){
+    return "店主"
+  }
+
+  })
+
+  const decodedPhoto = computed(() => {
+   return decodeURIComponent(atob(user.value.photo));
+});
 
 </script>
     
