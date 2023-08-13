@@ -14,7 +14,7 @@
 <div v-else>
     Loading user data...
 </div>
-<button class="btn btn-info" type="butten">編輯</button>
+<button class="btn btn-info" type="butten" @click="showModify">編輯</button>
 </template>
     
 <script setup>
@@ -54,6 +54,7 @@ const fetchUserData = async () => {
 };
 fetchUserData()
 
+
 const genderString = computed(() => {
   if( user.value.gender===1){
     return "男"
@@ -76,13 +77,25 @@ const identityString = computed(() => {
   if( user.value.identity===2){
     return "店主"
   }
+  
+})
 
-  })
-
-  const decodedPhoto = computed(() => {
-   return decodeURIComponent(atob(user.value.photo));
+const decodedPhoto = computed(() => {
+  if (user.value.photo) {
+    try {
+      return decodeURIComponent(atob(user.value.photo));
+    } catch (error) {
+      console.error("Error decoding photo:", error);
+      return null; // Return a default value or handle the error in your own way
+    }
+  } else {
+    return null; // Return a default value or handle the case where photo is not available
+  }
 });
 
+const showModify = ()=>{
+  router.push({ name: "UserModify"})
+}
 </script>
     
 <style>

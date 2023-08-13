@@ -103,6 +103,10 @@ const login = async  () => {
 
     
 <style>
+  main{
+     display: flex;
+     place-items: center;
+  }
     
       .bd-placeholder-img {
         font-size: 1.125rem;
