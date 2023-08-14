@@ -1,6 +1,9 @@
 <template>
 <h1>基本資料</h1>
-    <img :src="decodedPhoto" alt="User Photo" class="rounded mx-auto d-block" style="width: 8rem;border: 2px solid #000000;margin-top: 5px;">
+<div class="circular-image-container">
+  <img :src="decodedPhoto" alt="User Photo" class="circular-image">
+
+</div>
 
    <ul class="list-group list-group-flush" v-if="user">
   <li class="list-group-item" >userName : {{ user.userName}}</li>
@@ -14,7 +17,7 @@
 <div v-else>
     Loading user data...
 </div>
-<button class="btn btn-info" type="butten" @click="showModify">編輯</button>
+<button class="btn btn-primary btn-lg" type="butten" @click="showModify">編輯</button>
 </template>
     
 <script setup>
@@ -99,5 +102,12 @@ const showModify = ()=>{
 </script>
     
 <style>
-    
+    .circular-image {
+  width: 8rem;
+  border: 2px solid #000000;
+  margin-top: 5px;
+  border-radius: 50%; /* Set the border-radius to 50% for a circular shape */
+  display: block;
+  margin: 0 auto;
+}
 </style>
