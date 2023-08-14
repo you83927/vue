@@ -2,37 +2,27 @@
   <div class="container">
   <main>
     <div class="py-5 text-center">
-      <img class="d-block mx-auto mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-      <h2>Checkout form</h2>
     </div>
-
+    
     <div class="row g-5">
-     
+      
       <div class="col-md-7 col-lg-8">
-        <h4 class="mb-3">Billing address</h4>
-        <form class="needs-validation" novalidate>
+        <h4 class="mb-3">編輯資訊</h4>
+        <form class="needs-validation"  @submit.prevent="modify" novalidate>
           <div class="row g-3">
-            <div class="col-sm-6">
-              <label for="firstName" class="form-label">First name</label>
-              <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-              <div class="invalid-feedback">
-                Valid first name is required.
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label for="lastName" class="form-label">Last name</label>
-              <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
-              <div class="invalid-feedback">
-                Valid last name is required.
-              </div>
-            </div>
+             <h2>上傳大頭貼</h2>
+              <label for="uploadPhoto" class="user-photo-container" @change="changePhoto">
+                <img class="user-photo mx-auto d-block" :src="decodedPhoto" alt="" >
+                <input type="file" id="uploadPhoto" @change="handlePhotoChange" style="display: none" @click="upload">
+              </label>
+             
+     
 
             <div class="col-12">
               <label for="username" class="form-label">Username</label>
               <div class="input-group has-validation">
-                <span class="input-group-text">@</span>
-                <input type="text" class="form-control" id="username" placeholder="Username" required>
+                <!-- <span class="input-group-text">@</span> -->
+                <input type="text" class="form-control" id="username" placeholder="Username" v-model="user.userName"  required>
               <div class="invalid-feedback">
                   Your username is required.
                 </div>
@@ -41,57 +31,53 @@
 
             <div class="col-12">
               <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
-              <input type="email" class="form-control" id="email" placeholder="you@example.com">
+              <input type="email" class="form-control" id="email" v-model="user.email" placeholder="you@example.com">
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
               </div>
             </div>
 
             <div class="col-12">
-              <label for="address" class="form-label">Address</label>
-              <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+              <label for="nickName" class="form-label">Nick Name</label>
+              <input type="text" class="form-control" id="nickName" v-model="user.nickName" placeholder="" required>
               <div class="invalid-feedback">
                 Please enter your shipping address.
               </div>
             </div>
 
             <div class="col-12">
-              <label for="address2" class="form-label">Address 2 <span class="text-body-secondary">(Optional)</span></label>
-              <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
+              <label for="birthday" class="form-label">Birthday<span class="text-body-secondary">(Optional)</span></label>
+              <input type="date" class="form-control" id="birthday" placeholder="Apartment or suite" v-model="user.birthday">
             </div>
 
-            <div class="col-md-5">
-              <label for="country" class="form-label">Country</label>
-              <select class="form-select" id="country" required>
-                <option value="">Choose...</option>
-                <option>United States</option>
-              </select>
-              <div class="invalid-feedback">
-                Please select a valid country.
-              </div>
-            </div>
+            <div class="col-12">
+          <label for="gender" class="form-label">Gender <span class="text-body-secondary">(Optional)</span></label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" :checked="user.gender === 1 " @change="user.gender=1">
+            <label class="form-check-label" for="genderMale">
+              Male
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" :checked="user.gender === 2 " @change="user.gender=2">
+            <label class="form-check-label" for="genderFemale">
+              Female
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" id="genderOther" value="other" :checked="user.gender === 0 " @change="user.gender=0">
+            <label class="form-check-label" for="genderOther">
+              Other
+            </label>
+          </div>
+        </div>
 
-            <div class="col-md-4">
-              <label for="state" class="form-label">State</label>
-              <select class="form-select" id="state" required>
-                <option value="">Choose...</option>
-                <option>California</option>
-              </select>
-              <div class="invalid-feedback">
-                Please provide a valid state.
-              </div>
-            </div>
+          
 
-            <div class="col-md-3">
-              <label for="zip" class="form-label">Zip</label>
-              <input type="text" class="form-control" id="zip" placeholder="" required>
-              <div class="invalid-feedback">
-                Zip code required.
-              </div>
-            </div>
+        
           </div>
 
-          <hr class="my-4">
+          <!-- <hr class="my-4">
 
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="same-address">
@@ -101,12 +87,12 @@
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="save-info">
             <label class="form-check-label" for="save-info">Save this information for next time</label>
-          </div>
+          </div> -->
 
           <hr class="my-4">
 
 
-          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+          <button class="w-100 btn btn-primary btn-lg" type="submit">編輯完成</button>
         </form>
       </div>
     </div>
@@ -124,28 +110,111 @@
 </template>
 
 <script setup>
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(() => {
-  'use strict'
+    import { ref ,computed} from 'vue';
+    import axios from 'axios';
+    import { useRouter } from 'vue-router';
+    
+    const user = ref({});
+    
+    const router = useRouter();
+    
+    const fetchUserData = async () => {
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  const forms = document.querySelectorAll('.needs-validation')
+const response = await axios.get('http://localhost:8080/user/detial', {withCredentials:true});
+user.value =response.data.data
+console.log(user.value);
 
-  // Loop over them and prevent submission
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
+}
+fetchUserData()
 
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
+const decodedPhoto = computed(() => {
+  if (user.value.photo) {
+    try {
+      return decodeURIComponent(atob(user.value.photo));
+    } catch (error) {
+      console.error("Error decoding photo:", error);
+      return null; // Return a default value or handle the error in your own way
+    }
+  } else {
+    return null; // Return a default value or handle the case where photo is not available
+  }
+});
+
+
+const modify = async () => {
+  console.log(user.value);
+  const updateUser =user.value
+  console.log(updateUser);
+const response = await axios.put('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
+console.log(response);
+if(response.data.data=="更新成功"){
+  router.push({path:"/userDetial"})
+}
+
+}
+
+
+const handlePhotoChange = (event) => {
+  const selectedFile = event.target.files[0];
+
+  if (selectedFile) {
+    user.value.photo = selectedFile; // Update user's photo data
+      upload(); // Upload the selected photo
+
+    updatePhoto(formData);
+  }
+};
+
+const upload = async () => {
+  if (user.value.photo) {
+    const formData = new FormData();
+    formData.append('photo', user.value.photo);
+
+    try {
+      const response = await axios.post('http://localhost:8080/user/photo', formData, { withCredentials: true });
+      user.value.photo = response.data.data.photo; // 更新用户的头像 URL
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+    }
+  }
+};
+
+// // Example starter JavaScript for disabling form submissions if there are invalid fields
+// (() => {
+//   'use strict'
+
+//   // Fetch all the forms we want to apply custom Bootstrap validation styles to
+//   const forms = document.querySelectorAll('.needs-validation')
+
+//   // Loop over them and prevent submission
+//   Array.from(forms).forEach(form => {
+//     form.addEventListener('submit', event => {
+//       if (!form.checkValidity()) {
+//         event.preventDefault()
+//         event.stopPropagation()
+//       }
+
+//       form.classList.add('was-validated')
+//     }, false)
+//   })
+// })()
 </script>
 
 <style>
+  .user-photo-container {
+    width: 8rem;
+    height: 8rem;
+    margin-top: 5px;
+    border: 2px solid #000000;
+    border-radius: 50%; /* 添加圆形边框 */
+    overflow: hidden; /* 隐藏超出容器的部分 */
+  }
+
+  .user-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
  .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -217,4 +286,7 @@
       .bd-mode-toggle {
         z-index: 1500;
       }
+
+
+
 </style>
