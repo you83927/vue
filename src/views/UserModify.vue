@@ -9,12 +9,27 @@
       <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">編輯資訊</h4>
         <form class="needs-validation"  @submit.prevent="modify" novalidate>
+          <h2>上傳大頭貼</h2>
+          <label for="uploadPhoto" class="user-photo-container" >
+              <!-- 圖片容器 -->
+          <div @click="openFileInput" >
+            <!-- 用戶圖片 -->
+            <img
+              class="user-photo mx-auto d-block"
+              :src="decodedPhoto"
+              alt=""
+            />
+
+            <!-- 浮水印圖片 -->
+            <img
+              v-if="showWatermark"
+              class="watermark"
+              src="src/img/camera-plus-solid-60.png"
+            />
+          </div>
+            <input type="file" id="uploadPhoto" @change="handlePhotoChange" style="display: none" @click="upload">
+          </label>
           <div class="row g-3">
-             <h2>上傳大頭貼</h2>
-              <label for="uploadPhoto" class="user-photo-container" @change="changePhoto">
-                <img class="user-photo mx-auto d-block" :src="decodedPhoto" alt="" >
-                <input type="file" id="uploadPhoto" @change="handlePhotoChange" style="display: none" @click="upload">
-              </label>
              
      
 
@@ -92,7 +107,9 @@
           <hr class="my-4">
 
 
-          <button class="w-100 btn btn-primary btn-lg" type="submit">編輯完成</button>
+          <button class=" btn btn-primary btn-lg m-3" type="submit">編輯完成</button>
+          <button class=" btn btn-primary btn-lg " type="button" @click="back">返回</button>
+
         </form>
       </div>
     </div>
@@ -115,19 +132,33 @@
     import { useRouter } from 'vue-router';
     
     const user = ref({});
+
+    const showAddIcon = ref(false);
     
     const router = useRouter();
+
+    const showWatermark = ref(true);
+
+
+    const openFileInput = () => {
+  // 通過點擊隱藏的文件輸入元素來觸發文件選擇對話框
+  const fileInput = ref.$refs.fileInput;
+  fileInput.click();
+};
     
     const fetchUserData = async () => {
 
 const response = await axios.get('http://localhost:8080/user/detial', {withCredentials:true});
 user.value =response.data.data
-console.log(user.value);
 
 }
 fetchUserData()
 
 const decodedPhoto = computed(() => {
+  if(user.value.photo==null){
+    const noImage = "src/img/noImage.jpg"
+    return noImage
+  }
   if (user.value.photo) {
     try {
       return decodeURIComponent(atob(user.value.photo));
@@ -142,11 +173,8 @@ const decodedPhoto = computed(() => {
 
 
 const modify = async () => {
-  console.log(user.value);
   const updateUser =user.value
-  console.log(updateUser);
 const response = await axios.put('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
-console.log(response);
 if(response.data.data=="更新成功"){
   router.push({path:"/userDetial"})
 }
@@ -168,7 +196,8 @@ const handlePhotoChange = (event) => {
 const upload = async () => {
   if (user.value.photo) {
     const formData = new FormData();
-    formData.append('photo', user.value.photo);
+    console.log(user.value.photo);
+    formData.append('photo', user.value.photo.file);
 
     try {
       const response = await axios.post('http://localhost:8080/user/photo', formData, { withCredentials: true });
@@ -178,6 +207,10 @@ const upload = async () => {
     }
   }
 };
+
+const back = ()=>{
+  router.push({ name: "UserDetial"})
+}
 
 // // Example starter JavaScript for disabling form submissions if there are invalid fields
 // (() => {
@@ -201,19 +234,31 @@ const upload = async () => {
 </script>
 
 <style>
-  .user-photo-container {
+    .user-photo-container {
+    position: relative; /* 讓容器成為定位上下文 */
     width: 8rem;
     height: 8rem;
-    margin-top: 5px;
-    border: 2px solid #000000;
-    border-radius: 50%; /* 添加圆形边框 */
-    overflow: hidden; /* 隐藏超出容器的部分 */
+  
+    border: 1px solid #8f8686;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 5px;
+    cursor:pointer
   }
 
   .user-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .watermark {
+    position: absolute;
+    top: 50%; /* 垂直置中 */
+    left: 50%; /* 水平置中 */
+    transform: translate(-50%, -50%); /* 將圖片的中心點設置為容器的中心 */
+    width: 50%; /* 設置浮水印圖片的寬度 */
+    opacity: 0.3;
   }
  .bd-placeholder-img {
         font-size: 1.125rem;
