@@ -20,7 +20,6 @@
               v-if="photo"
               alt=""
             />
-
             <img
               class="user-photo1 mx-auto d-block"
               :src="photoUrl"
@@ -30,7 +29,7 @@
 
             <img
               class="user-photo1 mx-auto d-block"
-              :src="noPhoto"
+              src="/img/noImage.jpg"
               v-else
               alt=""
             />
@@ -154,7 +153,7 @@
     const router = useRouter();
 
 const photoUrl = ref('')
-const noPhoto = ref('')
+
     //抓user的資料
     const fetchUserData = async () => {
       const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
@@ -186,9 +185,7 @@ const modify = async () => {
 if(photo.value){
   updateUser.photo = btoa(photo.value)
 }
-if(photo.value="/img/noImage.jpg"){
-  updateUser.photo = null
-}
+
 
 const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
 
