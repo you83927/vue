@@ -154,13 +154,32 @@
 
 const photoUrl = ref('')
 
+const photo = ref("")
+
     //抓user的資料
     const fetchUserData = async () => {
       const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
       user.value =response
-      photoUrl.value = decodeURIComponent(atob(user.value.photo))
-}
-fetchUserData()
+      console.log(user.value.photo);
+      if(user.value.photo===null){
+        photo.value =null
+        // photoUrl.value = decodeURIComponent((user.value.photo))
+      }else{
+        photoUrl.value = decodeURIComponent(atob(user.value.photo))
+      }
+  //     try {
+  //   const response = await axiosGet('http://localhost:8080/user/detial', { withCredentials: true });
+  //   user.value = response;
+  //   if (user.value.photo) {
+  //     photoUrl.value = user.value.photo; // No need for decodeURIComponent or atob here
+  //   } else {
+  //     photoUrl.value = '/img/noImage.jpg';
+  //   }
+  // } catch (error) {
+  //   console.error('Error fetching user data:', error);
+  // }
+    }
+    fetchUserData()
 
 // const decodedPhoto = computed(() => {
 //   if(user.value.photo==null){
@@ -181,18 +200,31 @@ fetchUserData()
 
 //更新
 const modify = async () => {
-  const updateUser =user.value
-if(photo.value){
-  updateUser.photo = btoa(photo.value)
-}
-
+  const updateUser = user.value
+// if(photo.value){
+  // if(photo.value.photo=="/img/noImage.jpg"){
+  //     updateUser.photo = null
+  //   }else if(photo.value ==null){
+  //     updateUser.photo =photo.value
+  //   }else if(photo.value){
+  //     updateUser.photo = btoa(photo.value)
+  // }
+// }
+console.log(photo.value);
+if(photo.value ==null || photo.value == "/img/noImage.jpg"){
+  console.log(photo.value);
+  updateUser.photo = ""
+}else {
+  console.log(photoUrl.value);
+  updateUser.photo = btoa(photoUrl.value)
+  }
 
 const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
 
 if(response=="更新成功"){
   router.push({path:"/userDetial"})
 }
-  return error
+  // return error
 }
 
 
@@ -208,21 +240,21 @@ if(response=="更新成功"){
 // };
 
 
-const photo = ref("")
 const upload = async (e) => {
-  if(e.target.files[0]){
+  if(e.target.files[0] && e.target.files.length > 0){
     const reader = new FileReader()
     reader.readAsDataURL(e.target.files[0])
 
     
     reader.onload = (e)=>{
       photo.value = e.target.result
+      photoUrl.value  = e.target.result
       user.value.photo = e.target.result
 
     }
-  }
+ 
 };
-
+}
 const deletePhoto = ()=>{
   photo.value = "/img/noImage.jpg"
 }

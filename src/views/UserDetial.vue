@@ -1,7 +1,9 @@
 <template>
 <h1>基本資料</h1>
 <div class="user-photo-container1">
-  <img :src="decodedPhoto" alt="User Photo" class="user-photo mx-auto d-block" >
+  <img :src="decodedPhoto"  alt="User Photo" class="user-photo mx-auto d-block" >
+ 
+
 </div>
 
 
@@ -37,11 +39,17 @@ const router = useRouter();
 const user = ref({
 
 });
+const photo = ref("")
   
 const fetchUserData = async () => {
 
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response
+      if(user.value.photo==null){
+        photo.value ="/img/noImage.jpg"
+      }else{
+        photo.value = decodeURIComponent(atob(user.value.photo))
+      }
 
 //   user.value = response.data;
     
@@ -85,21 +93,26 @@ const identityString = computed(() => {
 })
 
 const decodedPhoto = computed(() => {
-  if(user.value.photo==null){
-    const noImage = "/img/noImage.jpg"
-    return noImage
-  }
-
-  if (user.value.photo) {
-    try {
-      return decodeURIComponent(atob(user.value.photo));
-    } catch (error) {
-      console.error("Error decoding photo:", error);
-      return null; // Return a default value or handle the error in your own way
-    }
+  if (user.value.photo && user.value.photo !== null) {
+    return decodeURIComponent(atob(user.value.photo));
   } else {
-    return null; // Return a default value or handle the case where photo is not available
+    return "/img/noImage.jpg";
   }
+  // if(user.value.photo==null ){
+  //   const noImage = "/img/noImage.jpg"
+  //   return noImage
+  // }
+
+  // if (user.value.photo) {
+  //   try {
+  //     return decodeURIComponent(atob(user.value.photo));
+  //   } catch (error) {
+  //     console.error("Error decoding photo:", error);
+  //     return null; // Return a default value or handle the error in your own way
+  //   }
+  // } else {
+  //   return null; // Return a default value or handle the case where photo is not available
+  // }
 });
 
 const showModify = ()=>{
