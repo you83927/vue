@@ -72,6 +72,7 @@
 <script setup >
     import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import {axiosPost,axiosGet,axiosPut} from '../global'
 
 const activeTab = ref('article'); // 初始选中的选项卡类型，默认为文章
 const articles = ref([]);
@@ -87,17 +88,17 @@ const fetchData = async (tab) => {
        let response;
        console.log(activeTab.value);
     if (activeTab.value === 'article') {
-      response = await axios.get('http://localhost:8080/user/favorite/articles',{withCredentials:true});
-      console.log(response.data.data);
-      articles.value = response.data.data;
+      response = await axiosGet('http://localhost:8080/user/favorite/articles',{withCredentials:true});
+      console.log(response);
+      articles.value = response;
     } else if (activeTab.value === 'restaurant') {
-      response = await axios.get('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
-      console.log(response.data.data);
-      restaurants.value = response.data.data;
+      response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
+      console.log(response);
+      restaurants.value = response;
     } else if (activeTab.value === 'food') {
-      response = await axios.get('http://localhost:8080/user/favorite/foods',{withCredentials:true});
-      console.log(response.data.data);
-      foods.value = response.data.data;
+      response = await axiosGet('http://localhost:8080/user/favorite/foods',{withCredentials:true});
+      console.log(response);
+      foods.value = response;
     }
   } catch (error) {
     console.error('An error occurred:', error);

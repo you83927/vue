@@ -19,6 +19,7 @@
     <label class="form-check-label" for="flexSwitchCheckDefault">Email</label>
 </div>
 <button type="submit" class="btn btn-info" @click="showUserDetial">送出</button>
+
 </form>
 </template>
     

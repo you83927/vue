@@ -57,6 +57,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import {axiosPost,axiosGet,axiosPut,swalSuccess} from '../global'
 
 const URL = import.meta.env.VITE_API_JAVAURL
 
@@ -72,17 +73,18 @@ const login = async  () => {
 };
 
   try {
-  const response = await axios.post('http://localhost:8080/user/login', user, {withCredentials:true})
-  if (response.data.data === 'login success') {
+  const response = await axiosPost('http://localhost:8080/user/login', user, {withCredentials:true})
+  if (response === 'login success') {
     // localStorage.setItem('user', JSON.stringify(user))
     console.log(response);
-      router.push({ path: '/' });
+    router.push({ path: '/' });
+    return response
     } else {
-      alert('Login failed: ' + response.data);
+      return response
     }
   } catch (error) {
     console.error('An error occurred:', error);
-    alert('An error occurred during login.');
+    return error
   }
     // .then((res) => {
     //   console.log(res);

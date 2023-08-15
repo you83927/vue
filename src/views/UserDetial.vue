@@ -27,6 +27,7 @@
     import { ref ,computed} from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
+    import {axiosPost,axiosGet} from '../global'
 
 const URL = import.meta.env.VITE_API_JAVAURL
 
@@ -39,8 +40,8 @@ const user = ref({
   
 const fetchUserData = async () => {
 
-  const response = await axios.get('http://localhost:8080/user/detial', {withCredentials:true});
-    user.value =response.data.data
+  const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
+    user.value =response
 
 //   user.value = response.data;
     
@@ -85,7 +86,7 @@ const identityString = computed(() => {
 
 const decodedPhoto = computed(() => {
   if(user.value.photo==null){
-    const noImage = "src/img/noImage.jpg"
+    const noImage = "/img/noImage.jpg"
     return noImage
   }
 
@@ -129,8 +130,8 @@ const showPrivacySetting = ()=>{
   }
 
   .user-photo {
-    width: 110%;
-    height: 110%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
    
   }

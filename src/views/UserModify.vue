@@ -10,25 +10,40 @@
         <h4 class="mb-3">編輯資訊</h4>
         <form class="needs-validation"  @submit.prevent="modify" novalidate>
           <h2>上傳大頭貼</h2>
-          <label for="uploadPhoto" class="user-photo-container" >
+          <label for="uploadPhoto">
               <!-- 圖片容器 -->
-          <div @click="openFileInput" >
+          <div  class="user-photo-container">
             <!-- 用戶圖片 -->
             <img
-              class="user-photo mx-auto d-block"
-              :src="decodedPhoto"
+              class="user-photo1 mx-auto d-block"
+              :src="photo"
+              v-if="photo"
+              alt=""
+            />
+
+            <img
+              class="user-photo1 mx-auto d-block"
+              :src="photoUrl"
+              v-else-if="photoUrl"
+              alt=""
+            />
+
+            <img
+              class="user-photo1 mx-auto d-block"
+              :src="noPhoto"
+              v-else
               alt=""
             />
 
             <!-- 浮水印圖片 -->
             <img
-              v-if="showWatermark"
               class="watermark"
-              src="src/img/camera-plus-solid-60.png"
+              src="/img/camera-plus-solid-60.png"
             />
           </div>
-            <input type="file" id="uploadPhoto" @change="handlePhotoChange" style="display: none" @click="upload">
+            <input type="file" id="uploadPhoto"  style="display: none" @change="upload">
           </label>
+          <button type="button" class="btn btn-danger" @click="deletePhoto">刪除頭貼</button>
           <div class="row g-3">
              
      
@@ -37,7 +52,7 @@
               <label for="username" class="form-label">Username</label>
               <div class="input-group has-validation">
                 <!-- <span class="input-group-text">@</span> -->
-                <input type="text" class="form-control" id="username" placeholder="Username" v-model="user.userName"  required>
+                <input type="text" class="form-control" id="username" placeholder="Username" v-model="user.userName"  required disabled>
               <div class="invalid-feedback">
                   Your username is required.
                 </div>
@@ -87,6 +102,8 @@
           </div>
         </div>
 
+   
+
           
 
         
@@ -130,107 +147,95 @@
     import { ref ,computed} from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
+    import {axiosPost,axiosGet,axiosPut} from '../global'
     
     const user = ref({});
-
-    const showAddIcon = ref(false);
     
     const router = useRouter();
 
-    const showWatermark = ref(true);
-
-
-    const openFileInput = () => {
-  // 通過點擊隱藏的文件輸入元素來觸發文件選擇對話框
-  const fileInput = ref.$refs.fileInput;
-  fileInput.click();
-};
-    
+const photoUrl = ref('')
+const noPhoto = ref('')
+    //抓user的資料
     const fetchUserData = async () => {
-
-const response = await axios.get('http://localhost:8080/user/detial', {withCredentials:true});
-user.value =response.data.data
-
+      const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
+      user.value =response
+      photoUrl.value = decodeURIComponent(atob(user.value.photo))
 }
 fetchUserData()
 
-const decodedPhoto = computed(() => {
-  if(user.value.photo==null){
-    const noImage = "src/img/noImage.jpg"
-    return noImage
-  }
-  if (user.value.photo) {
-    try {
-      return decodeURIComponent(atob(user.value.photo));
-    } catch (error) {
-      console.error("Error decoding photo:", error);
-      return null; // Return a default value or handle the error in your own way
-    }
-  } else {
-    return null; // Return a default value or handle the case where photo is not available
-  }
-});
+// const decodedPhoto = computed(() => {
+//   if(user.value.photo==null){
+//     const noImage = "/noImage.jpg"
+//     return noImage
+//   }
+//   if (user.value.photo) {
+//     try {
+//       return decodeURIComponent(atob(user.value.photo));
+//     } catch (error) {
+//       console.error("Error decoding photo:", error);
+//       return null; // Return a default value or handle the error in your own way
+//     }
+//   } else {
+//     return null; // Return a default value or handle the case where photo is not available
+//   }
+// });
 
-
+//更新
 const modify = async () => {
   const updateUser =user.value
-const response = await axios.put('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
-if(response.data.data=="更新成功"){
+if(photo.value){
+  updateUser.photo = btoa(photo.value)
+}
+if(photo.value="/img/noImage.jpg"){
+  updateUser.photo = null
+}
+
+const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
+
+if(response=="更新成功"){
   router.push({path:"/userDetial"})
 }
-
+  return error
 }
 
 
-const handlePhotoChange = (event) => {
-  const selectedFile = event.target.files[0];
+// const handlePhotoChange = (event) => {
+//   const selectedFile = event.target.files[0];
 
-  if (selectedFile) {
-    user.value.photo = selectedFile; // Update user's photo data
-      upload(); // Upload the selected photo
+//   if (selectedFile) {
+//     user.value.photo = selectedFile; // Update user's photo data
+//       upload(); // Upload the selected photo
 
-    updatePhoto(formData);
-  }
-};
+//     updatePhoto(formData);
+//   }
+// };
 
-const upload = async () => {
-  if (user.value.photo) {
-    const formData = new FormData();
-    console.log(user.value.photo);
-    formData.append('photo', user.value.photo.file);
 
-    try {
-      const response = await axios.post('http://localhost:8080/user/photo', formData, { withCredentials: true });
-      user.value.photo = response.data.data.photo; // 更新用户的头像 URL
-    } catch (error) {
-      console.error("Error uploading photo:", error);
+const photo = ref("")
+const upload = async (e) => {
+  if(e.target.files[0]){
+    const reader = new FileReader()
+    reader.readAsDataURL(e.target.files[0])
+
+    
+    reader.onload = (e)=>{
+      photo.value = e.target.result
+      user.value.photo = e.target.result
+
     }
   }
 };
 
-const back = ()=>{
-  router.push({ name: "UserDetial"})
+const deletePhoto = ()=>{
+  photo.value = "/img/noImage.jpg"
 }
 
-// // Example starter JavaScript for disabling form submissions if there are invalid fields
-// (() => {
-//   'use strict'
+//返回
+const back = ()=>{
+router.push({ name: "UserDetial"})
+}
 
-//   // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//   const forms = document.querySelectorAll('.needs-validation')
 
-//   // Loop over them and prevent submission
-//   Array.from(forms).forEach(form => {
-//     form.addEventListener('submit', event => {
-//       if (!form.checkValidity()) {
-//         event.preventDefault()
-//         event.stopPropagation()
-//       }
-
-//       form.classList.add('was-validated')
-//     }, false)
-//   })
-// })()
 </script>
 
 <style>
@@ -246,7 +251,7 @@ const back = ()=>{
     cursor:pointer
   }
 
-  .user-photo {
+  .user-photo1 {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -258,7 +263,7 @@ const back = ()=>{
     left: 50%; /* 水平置中 */
     transform: translate(-50%, -50%); /* 將圖片的中心點設置為容器的中心 */
     width: 50%; /* 設置浮水印圖片的寬度 */
-    opacity: 0.3;
+    opacity: 0.2;
   }
  .bd-placeholder-img {
         font-size: 1.125rem;
