@@ -72,7 +72,7 @@
 <script setup >
     import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import {axiosPost,axiosGet,axiosPut} from '../global'
+import {axiosPost,axiosGet,axiosPut,axiosDelete} from '../global'
 
 const activeTab = ref('article'); // 初始选中的选项卡类型，默认为文章
 const articles = ref([]);

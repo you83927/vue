@@ -8,20 +8,33 @@
 
 
    <ul class="list-group list-group-flush" v-if="user">
-  <li class="list-group-item" >User Name : {{ user.userName}}</li>
-  <li class="list-group-item">Identity : {{ identityString}}</li>
-  <li class="list-group-item">Nick Name : {{ user.nickName}}</li>
-  <li class="list-group-item">Gender : {{ genderString}}</li>
-  <li class="list-group-item">Birthday : {{ user.birthday}}</li>
-  <li class="list-group-item">Email : {{ user.email}}</li>
+  <li class="list-group-item" >使用者 : {{ user.userName}}</li>
+  <li class="list-group-item">身份 : {{ identityString}}</li>
+
+  <li class="list-group-item" v-if="showNickName" >暱稱 : {{showNickName}}</li>
+  <li class="list-group-item" v-else-if="showNickName==''" >暱稱 : {{showNickName}}</li>
+
+  <li class="list-group-item" v-if="genderString=='男'">性別 : {{ genderString}}</li>
+  <li class="list-group-item" v-else-if="genderString=='女'">性別 : {{ genderString}}</li>
+  <li class="list-group-item" v-else-if="genderString==''">性別 : {{ genderString}}</li>
+
+
+
+  <li class="list-group-item" v-if="showBirthday">生日 : {{ showBirthday}}</li>
+  <li class="list-group-item" v-else-if="showBirthday==''">生日 : {{ showBirthday}}</li>
+
+
+  <li class="list-group-item" v-if="showEmail">信箱 : {{ showEmail}}</li>
+  <li class="list-group-item" v-else-if="showEmail==''">信箱 : {{ showEmail}}</li>
+
 </ul>
 
 <div v-else>
   Loading user data...
 </div>
 
-<button class="btn btn-info m-3" type="butten" @click="showModify">編輯</button>
-<button class="btn btn-info" type="butten" @click="showPrivacySetting">隱私設定</button>
+<button class="btn btn-info m-3" type="butten" @click="showModify">編輯基本資料</button>
+<button class="btn btn-info" type="butten" @click="showPrivacySetting">更改密碼</button>
 
 </template>
     
@@ -42,14 +55,16 @@ const user = ref({
 const photo = ref("")
   
 const fetchUserData = async () => {
-
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response
+    console.log(user.value.photo);
       if(user.value.photo==null){
         photo.value ="/img/noImage.jpg"
       }else{
         photo.value = decodeURIComponent(atob(user.value.photo))
+        console.log(photo.value);
       }
+
 
 //   user.value = response.data;
     
@@ -74,9 +89,10 @@ const genderString = computed(() => {
   if( user.value.gender===2){
     return "女"
   }
-  if( user.value.gender===0){
-    return "其他"
+  if( user.value.gender==null || user.value.gender===0){
+    return null
   }
+  
   
 });
 const identityString = computed(() => {
@@ -91,6 +107,30 @@ const identityString = computed(() => {
   }
   
 })
+
+const showEmail = computed(()=>{
+
+  if(user.value.email==null ||user.value.email==""){
+    return null
+}
+  return user.value.email
+})
+
+
+const showNickName = computed(()=>{
+if(user.value.nickName==null ||user.value.nickName==""){
+  return null
+}
+return user.value.nickName
+})
+
+const showBirthday = computed(()=>{
+if(user.value.birthday==null ||user.value.birthday=="0001-01-01"){
+  return null
+}
+return user.value.birthday
+})
+
 
 const decodedPhoto = computed(() => {
   if (user.value.photo && user.value.photo !== null) {
@@ -122,6 +162,7 @@ const showModify = ()=>{
 const showPrivacySetting = ()=>{
   router.push({name:"PrivacySetting"})
 }
+
 </script>
     
 <style>

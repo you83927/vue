@@ -1,26 +1,6 @@
 <template>
 <h1>隱私設定</h1>
-<form action="">
 
-    <div  class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Nick Name</label>
-    </div>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" >
-        <label class="form-check-label" for="flexSwitchCheckDefault">Gender</label>
-</div>
-<div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" >
-    <label class="form-check-label" for="flexSwitchCheckDefault">Birthday</label>
-</div>
-<div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"  >
-    <label class="form-check-label" for="flexSwitchCheckDefault">Email</label>
-</div>
-<button type="submit" class="btn btn-info" @click="showUserDetial">送出</button>
-
-</form>
 </template>
     
 <script setup>

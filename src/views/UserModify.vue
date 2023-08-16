@@ -60,7 +60,7 @@
 
             <div class="col-12">
               <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
-              <input type="email" class="form-control" id="email" v-model="user.email" placeholder="you@example.com">
+              <input type="email" class="form-control" id="email" v-model.trim="user.email" placeholder="you@example.com">
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
               </div>
@@ -68,7 +68,7 @@
 
             <div class="col-12">
               <label for="nickName" class="form-label">Nick Name</label>
-              <input type="text" class="form-control" id="nickName" v-model="user.nickName" placeholder="" required>
+              <input type="text" class="form-control" id="nickName" v-model.trim="user.nickName" placeholder="" required>
               <div class="invalid-feedback">
                 Please enter your shipping address.
               </div>
@@ -76,27 +76,24 @@
 
             <div class="col-12">
               <label for="birthday" class="form-label">Birthday<span class="text-body-secondary">(Optional)</span></label>
-              <input type="date" class="form-control" id="birthday" placeholder="Apartment or suite" v-model="user.birthday">
+              <input type="date" class="form-control" id="birthday" placeholder="Apartment or suite"  v-model="user.birthday">
+            
+               <!-- <el-date-picker v-model="user.birthday" id="birthday" type="date" placeholder="Pick a date"  /> -->
+            
             </div>
 
             <div class="col-12">
           <label for="gender" class="form-label">Gender <span class="text-body-secondary">(Optional)</span></label>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" :checked="user.gender === 1 " @change="user.gender=1">
+            <input class="form-check-input" type="checkbox" name="gender" id="genderMale" value="male"  :checked="user.gender === 1 " @change="handleGenderChange(1)">
             <label class="form-check-label" for="genderMale">
               Male
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" :checked="user.gender === 2 " @change="user.gender=2">
+            <input class="form-check-input" type="checkbox" name="gender" id="genderFemale" value="female" :checked="user.gender === 2 " @change="handleGenderChange(2)">
             <label class="form-check-label" for="genderFemale">
               Female
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="genderOther" value="other" :checked="user.gender === 0 " @change="user.gender=0">
-            <label class="form-check-label" for="genderOther">
-              Other
             </label>
           </div>
         </div>
@@ -148,7 +145,9 @@
     import { useRouter } from 'vue-router';
     import {axiosPost,axiosGet,axiosPut} from '../global'
     
-    const user = ref({});
+    const user = ref({
+      gender: 0
+    });
     
     const router = useRouter();
 
@@ -156,17 +155,30 @@ const photoUrl = ref('')
 
 const photo = ref("")
 
+
+const handleGenderChange = (selectedGender) => {
+  if (user.value.gender === selectedGender) {
+    // If the selected gender is already the current user.gender
+    user.value.gender = 0; // Reset to no gender
+  } else {
+    user.value.gender = selectedGender; // Set the selected gender
+  }
+};
+
     //抓user的資料
     const fetchUserData = async () => {
       const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
       user.value =response
-      console.log(user.value.photo);
       if(user.value.photo===null){
         photo.value =null
         // photoUrl.value = decodeURIComponent((user.value.photo))
       }else{
         photoUrl.value = decodeURIComponent(atob(user.value.photo))
       }
+
+      if(user.value.birthday==null || user.value.birthday=='0001-01-01'){
+        user.value.birthday = null
+       }
   //     try {
   //   const response = await axiosGet('http://localhost:8080/user/detial', { withCredentials: true });
   //   user.value = response;
@@ -210,15 +222,18 @@ const modify = async () => {
   //     updateUser.photo = btoa(photo.value)
   // }
 // }
-console.log(photo.value);
 if(photo.value ==null || photo.value == "/img/noImage.jpg"){
   console.log(photo.value);
-  updateUser.photo = ""
+  
 }else {
-  console.log(photoUrl.value);
   updateUser.photo = btoa(photoUrl.value)
   }
 
+  if(user.value.birthday==null || user.value.birthday==""){
+    updateUser.birthday = '0001-01-01'
+  }
+
+  console.log(updateUser.birthday);
 const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
 
 if(response=="更新成功"){
