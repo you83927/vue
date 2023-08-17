@@ -213,15 +213,7 @@ const handleGenderChange = (selectedGender) => {
 //更新
 const modify = async () => {
   const updateUser = user.value
-// if(photo.value){
-  // if(photo.value.photo=="/img/noImage.jpg"){
-  //     updateUser.photo = null
-  //   }else if(photo.value ==null){
-  //     updateUser.photo =photo.value
-  //   }else if(photo.value){
-  //     updateUser.photo = btoa(photo.value)
-  // }
-// }
+
 if(photo.value ==null || photo.value == "/img/noImage.jpg"){
   console.log(photo.value);
   updateUser.photo = ""

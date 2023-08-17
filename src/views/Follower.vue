@@ -2,7 +2,7 @@
    <div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item" v-for="follower in followers" :key="follower.id">
-      <div>
+      <div >
         <div class="user-photo-container2" style=" float:left">
           <img :src="follower.photo"  alt="User Photo" class="user-photo mx-auto d-block" >
         </div>
@@ -18,12 +18,44 @@
                 追蹤中
               </div>
               <div v-else>
-                <button type="button" class="btn btn-info" @click="addFollower">追踪用戶</button>
+                <button type="button" class="btn btn-info" @click="addFollower(follower.id)">追踪用戶</button>
               </div>
             </div>
-            <!-- <button class="btn btn-danger" style="float:right;"  @change="changeFollowerBtn(follower.id)">更改追蹤狀態</button> -->
-            <button class="delete btn btn-danger" style="float:right;" @click="toggleRemoveMode(follower.id)">取消追蹤</button>
             
+            <!-- <button class="delete btn btn-danger" style="float:right;" @click="toggleRemoveMode(follower.id)">刪除</button> -->
+           
+            <div class="flex justify-space-between mb-4 flex-wrap gap-4">
+
+              <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                <el-button 
+                v-for="button in buttons"
+                :key="button.text"
+                :type="button.type"
+                link
+                ><i class='bx bx-dots-vertical-rounded bx-sm' ></i></el-button
+              >
+                <el-icon class="el-icon--right"><caret-bottom /></el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item class="clearfix">
+                    <div  @click="toggleRemoveMode(follower.id)">刪除</div>
+                   
+                  </el-dropdown-item>
+                  <el-dropdown-item class="clearfix">
+                    replies
+                    <el-badge class="mark" :value="3" />
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+
+
+              
+
+  </div>
+
           </div>
         </div>
     </li>
@@ -34,11 +66,15 @@
 </template>
     
 <script setup >
-  import { ref,computed} from 'vue';
+  import { ref,computed,nextTick } from 'vue';
   import axios from 'axios';
   import {axiosPost,axiosGet,axiosPut,axiosDelete, swalSuccess} from '../global'
   import { useRouter } from 'vue-router';
 
+  const buttons = [
+  { type: '', text: 'plain' },
+ 
+] 
 
 const followers = ref([]);
 const isLoading = ref(true);
@@ -49,14 +85,22 @@ const isRemove = ref([]);
 
 const user = ref('')
 
-const addFollowingUser = ref('')
+const addFollowingUser = ref({
+  id:{  
+        
+        following:''
+    },
+    isFav:0
+
+})
 
 
 
 const fetchUserData = async () => {
     const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true});
     followers.value = response;
-    user.value = response;
+    // user.value = response;
+    
     isLoading.value = false;
     followers.value.forEach((follower)=>{
       if(follower.photo==null){
@@ -65,29 +109,43 @@ const fetchUserData = async () => {
       }else{
         follower.photo = atob(follower.photo)
       }
+      user.value = follower
       isRemove.value[follower.id] = false;
     })
 }
 fetchUserData()
 
 const deleteUser = async(deleteId)=>{
+  console.log(11111);
   const response = await axiosDelete('http://localhost:8080/user/deleteFollower/'+deleteId,{withCredentials:true})
   swalSuccess(response)
   // location.reload()
-  fetchUserData()
+  // fetchUserData()
 }
 
 const toggleRemoveMode = async (followerId) => {
-  if (followers.value.find(follower => follower.id === followerId).id === user.value.id) {
-      await deleteUser(followerId);
-      fetchUserData();
-   } else {
-      isRemove.value[followerId] = !isRemove.value[followerId];
+  console.log(followers.value.find(follower => follower.id === followerId).id);
+  console.log(followerId);
+  
+  if (followers.value.find(follower => follower.id === followerId).id) {
+    await deleteUser(followerId);
+    isRemove.value[followerId] = !isRemove.value[followerId];
+    // fetchUserData();
+    } else {
    }
 };
 
-const addFollower = async()=>{
-await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser,{withCredentials:true})
+
+
+const addFollower = async(addFollowing)=>{
+  isRemove.value[addFollowing] = !isRemove.value[addFollowing];
+  
+  console.log(addFollowing);
+  addFollowingUser.value.id.following= addFollowing
+  console.log(addFollowingUser.value.id.following);
+  console.log(addFollowingUser.value);
+  // await nextTick() 
+await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
 }
 
 // const changeFollowerBtn = (follower)=>{
@@ -140,5 +198,8 @@ await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser,{wi
     height: 100%;
     object-fit: cover;
    
+  }
+  .flex{
+    float:right
   }
 </style>
