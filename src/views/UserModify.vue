@@ -224,7 +224,7 @@ const modify = async () => {
 // }
 if(photo.value ==null || photo.value == "/img/noImage.jpg"){
   console.log(photo.value);
-  
+  updateUser.photo = ""
 }else {
   updateUser.photo = btoa(photoUrl.value)
   }
@@ -238,6 +238,7 @@ const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,
 
 if(response=="更新成功"){
   router.push({path:"/userDetial"})
+  
 }
   // return error
 }

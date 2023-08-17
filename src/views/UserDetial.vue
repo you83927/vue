@@ -53,6 +53,7 @@ const user = ref({
 
 });
 const photo = ref("")
+
   
 const fetchUserData = async () => {
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
@@ -64,20 +65,6 @@ const fetchUserData = async () => {
         photo.value = decodeURIComponent(atob(user.value.photo))
         console.log(photo.value);
       }
-
-
-//   user.value = response.data;
-    
-//   axios
-//     .get('http://localhost:8080/user/detial', config)
-//     .then((res) => {
-//         user.value = res.data.data;
-//         console.log(user);
-    
-//     })
-//     .catch((error) => {
-//         console.log(error.response.data.msg);
-//     });
 };
 fetchUserData()
 

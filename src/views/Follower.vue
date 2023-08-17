@@ -3,14 +3,29 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item" v-for="follower in followers" :key="follower.id">
       <div>
-        <div class="user-photo-container2">
+        <div class="user-photo-container2" style=" float:left">
           <img :src="follower.photo"  alt="User Photo" class="user-photo mx-auto d-block" >
         </div>
-      <div>
-        {{ follower.userName}}
-      </div>
-        {{ follower.nickName}}
-      </div>
+        <div>
+          <div style="font-size: large;font-weight:bolder;padding-left: 100px;padding-top: 10px;">
+            {{ follower.userName}}
+          </div>
+          <div style="font-size: smaller;font-weight:lighter;padding-left: 100px;">
+            {{ follower.nickName}}
+          </div>
+          <div >
+              <div v-if="!isRemove[follower.id] || follower.id==user.id">
+                追蹤中
+              </div>
+              <div v-else>
+                <button type="button" class="btn btn-info" @click="addFollower">追踪用戶</button>
+              </div>
+            </div>
+            <!-- <button class="btn btn-danger" style="float:right;"  @change="changeFollowerBtn(follower.id)">更改追蹤狀態</button> -->
+            <button class="delete btn btn-danger" style="float:right;" @click="toggleRemoveMode(follower.id)">取消追蹤</button>
+            
+          </div>
+        </div>
     </li>
   </ul>
   <div v-if="isLoading" class="loading-message">Loading...</div>
@@ -21,17 +36,27 @@
 <script setup >
   import { ref,computed} from 'vue';
   import axios from 'axios';
-  import {axiosPost,axiosGet,axiosPut,axiosDelete} from '../global'
+  import {axiosPost,axiosGet,axiosPut,axiosDelete, swalSuccess} from '../global'
+  import { useRouter } from 'vue-router';
 
 
 const followers = ref([]);
 const isLoading = ref(true);
 const error = ref('');
-const photo = ref('')
+const router = useRouter();
+
+const isRemove = ref([]);
+
+const user = ref('')
+
+const addFollowingUser = ref('')
+
+
 
 const fetchUserData = async () => {
     const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true});
     followers.value = response;
+    user.value = response;
     isLoading.value = false;
     followers.value.forEach((follower)=>{
       if(follower.photo==null){
@@ -40,11 +65,46 @@ const fetchUserData = async () => {
       }else{
         follower.photo = atob(follower.photo)
       }
-        
+      isRemove.value[follower.id] = false;
     })
 }
 fetchUserData()
 
+const deleteUser = async(deleteId)=>{
+  const response = await axiosDelete('http://localhost:8080/user/deleteFollower/'+deleteId,{withCredentials:true})
+  swalSuccess(response)
+  // location.reload()
+  fetchUserData()
+}
+
+const toggleRemoveMode = async (followerId) => {
+  if (followers.value.find(follower => follower.id === followerId).id === user.value.id) {
+      await deleteUser(followerId);
+      fetchUserData();
+   } else {
+      isRemove.value[followerId] = !isRemove.value[followerId];
+   }
+};
+
+const addFollower = async()=>{
+await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser,{withCredentials:true})
+}
+
+// const changeFollowerBtn = (follower)=>{
+//   if (follower.id) {
+//     console.log(11111111);
+//       // 如果 follower.id 不为空，表示正在追踪中，点击后取消追踪
+//       follower.id = null;
+//     } else {
+//     console.log(22222222);
+
+//       // 如果 follower.id 为空，表示未追踪，点击后追踪
+//       // 在这里调用追踪 API 或执行其他相关逻辑
+//       // 例如，可以调用 addFollower 方法来执行追踪操作
+//       addFollower(follower);
+//     }
+//     console.log(33333333);
+// }
 // const Photos = computed(() => {
 //   return followers.value.map(follower => {
 //     // console.log(follower.photo);
@@ -68,8 +128,8 @@ fetchUserData()
     
 <style>
   .user-photo-container2 {
-    width: 5rem;
-    height: 5rem;
+    width: 4rem;
+    height: 4rem;
     border: 1px solid #8f8686;
     border-radius: 50%; /* 添加圆形边框 */
     overflow: hidden; /* 隐藏超出容器的部分 */
