@@ -78,6 +78,7 @@ const activeTab = ref('article'); // 初始选中的选项卡类型，默认为�
 const articles = ref([]);
 const restaurants = ref([]);
 const foods = ref([]);
+// location.reload()
 
 onMounted(async () => {
   await fetchData(activeTab.value);
@@ -103,6 +104,7 @@ const fetchData = async (tab) => {
   } catch (error) {
     console.error('An error occurred:', error);
   }
+  
 };
 
 // 切换选项卡时更新数据

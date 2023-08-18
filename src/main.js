@@ -59,7 +59,8 @@ import UserDetial from "./views/UserDetial.vue"
 import Follower from "./views/Follower.vue"
 import UserModify from "./views/UserModify.vue"
 import PrivacySetting from "./views/PrivacySetting.vue"
-
+import OtherUsers from "./views/OtherUsers.vue"
+import SearchUsername from "./views/SearchUsername.vue"
 const routers=[
     {
         path:'/helloVue',
@@ -111,7 +112,20 @@ const routers=[
         path:'/rivacySetting',
         name:'PrivacySetting',
         component:PrivacySetting
+    },
+    {
+        path:'/otherUsers/:userId',
+        name:'OtherUsers',
+        component:OtherUsers
+    },
+    {
+        path:'/searchUsername',
+        name:'SearchUsername',
+        component:SearchUsername
     }
+
+    
+    
     
 ]
 

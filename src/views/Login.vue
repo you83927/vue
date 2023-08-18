@@ -78,7 +78,9 @@ const login = async  () => {
     // localStorage.setItem('user', JSON.stringify(user))
     console.log(response);
     router.push({ path: '/' });
-    return response
+    
+    // return response
+    
     } else {
       return response
     }
@@ -86,6 +88,7 @@ const login = async  () => {
     console.error('An error occurred:', error);
     return error
   }
+  
     // .then((res) => {
     //   console.log(res);
     //     console.log(res.data);

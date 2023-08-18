@@ -1,5 +1,5 @@
 <template>
-  <div class="demo-input-size">
+          <div class="demo-input-size">
     <el-input
       v-model="input1"
       class="w-50 m-2"
@@ -7,10 +7,9 @@
       placeholder="Please Input"
       :prefix-icon="Search"
       @input="searchUsername"
-    />
-   
+    /> 
   </div>
-   <div>
+  <div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item" v-for="follower in followers" :key="follower.id">
       <div >
@@ -73,18 +72,14 @@
   </div>
 </template>
     
-<script setup >
+<script setup>
   import { ref,computed,nextTick } from 'vue';
   import axios from 'axios';
   import {axiosPost,axiosGet,axiosPut,axiosDelete, swalSuccess} from '../global'
   import { useRouter } from 'vue-router';
-  import { Search } from '@element-plus/icons-vue'
+ import { Search } from '@element-plus/icons-vue'
 
-  const buttons = [
-  { type: '', text: 'plain' },
-] 
-
-const input1 = ref('')
+ const input1 = ref('')
 
 const followers = ref([]);
 const isLoading = ref(true);
@@ -94,20 +89,9 @@ const router = useRouter();
 const isRemove = ref([]);
 
 const user = ref('')
-
-const addFollowingUser = ref({
-  id:{  
-        
-        following:''
-    },
-    isFav:0
-
-})
-
-
-
-const fetchUserData = async () => {
-    const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true});
+ 
+    const fetchUserData = async () => {
+    const response = await axiosGet('http://localhost:8080/user/findAllUser',{withCredentials:true});
     followers.value = response;
     // user.value = response;
     
@@ -125,29 +109,9 @@ const fetchUserData = async () => {
 }
 fetchUserData()
 
-const deleteUser = async(deleteId)=>{
-  console.log(11111);
-  const response = await axiosDelete('http://localhost:8080/user/deleteFollower/'+deleteId,{withCredentials:true})
-  swalSuccess(response)
-  // location.reload()
-  // fetchUserData()
-}
-
-const toggleRemoveMode = async (followerId) => {
-  console.log(followers.value.find(follower => follower.id === followerId).id);
-  console.log(followerId);
-  
-  if (followers.value.find(follower => follower.id === followerId).id) {
-    await deleteUser(followerId);
-    isRemove.value[followerId] = !isRemove.value[followerId];
-    // fetchUserData();
-    } else {
-   }
-};
-
 const searchUsername = async()=>{
- const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value}})
-
+ const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value}})
+console.log(response);
  followers.value = response;
     // user.value = response;
     
@@ -163,78 +127,8 @@ const searchUsername = async()=>{
       isRemove.value[follower.id] = false;
     })
 }
-
-const addFollower = async(addFollowing)=>{
-  isRemove.value[addFollowing] = !isRemove.value[addFollowing];
-  
-  console.log(addFollowing);
-  addFollowingUser.value.id.following= addFollowing
-  console.log(addFollowingUser.value.id.following);
-  console.log(addFollowingUser.value);
-  // await nextTick() 
-await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
-}
-
-
-const goToOrderUser = async(userId)=>{
- const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
-
-console.log(response);
-router.push({path:"otherUsers/"+userId})
-}
-
-// const changeFollowerBtn = (follower)=>{
-//   if (follower.id) {
-//     console.log(11111111);
-//       // 如果 follower.id 不为空，表示正在追踪中，点击后取消追踪
-//       follower.id = null;
-//     } else {
-//     console.log(22222222);
-
-//       // 如果 follower.id 为空，表示未追踪，点击后追踪
-//       // 在这里调用追踪 API 或执行其他相关逻辑
-//       // 例如，可以调用 addFollower 方法来执行追踪操作
-//       addFollower(follower);
-//     }
-//     console.log(33333333);
-// }
-// const Photos = computed(() => {
-//   return followers.value.map(follower => {
-//     // console.log(follower.photo);
-//     if (follower.photo && follower.photo !== null && follower.photo !=="/img/noImage.jpg") {
-   
-//      return follower.photo
-//     } else {
-//       return "/img/noImage.jpg";
-//     }
-//   });
-// });
-// const Photos = computed(() => {
-//   console.log(followers.value.mpa);
-//   if (followers.value.photo && followers.value.photo !== null) {
-//     return decodeURIComponent(atob(followers.value.photo));
-//   } else {
-//     return "/img/noImage.jpg";
-//   }
-// });
 </script>
     
 <style>
-  .user-photo-container2 {
-    width: 4rem;
-    height: 4rem;
-    border: 1px solid #8f8686;
-    border-radius: 50%; /* 添加圆形边框 */
-    overflow: hidden; /* 隐藏超出容器的部分 */
-    margin: 5px;
-  }
-      .user-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-   
-  }
-  .flex{
-    float:right
-  }
+    
 </style>

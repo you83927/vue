@@ -58,12 +58,12 @@ const photo = ref("")
 const fetchUserData = async () => {
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response
-    console.log(user.value.photo);
+    // console.log(user.value.photo);
       if(user.value.photo==null){
         photo.value ="/img/noImage.jpg"
       }else{
         photo.value = decodeURIComponent(atob(user.value.photo))
-        console.log(photo.value);
+        // console.log(photo.value);
       }
 };
 fetchUserData()

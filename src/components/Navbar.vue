@@ -28,6 +28,7 @@
             <li> <router-link class="dropdown-item" to="/userDetial">用戶資料</router-link></li>
             <li> <router-link class="dropdown-item" to="/follower">追蹤用戶</router-link></li>
             <li><router-link class="dropdown-item" to="/">最愛</router-link></li>
+             <li><router-link class="dropdown-item" to="/searchUsername">搜尋</router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" @click="logOut">登出</a></li>
           </ul>
