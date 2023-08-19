@@ -10,7 +10,7 @@
     />
    
   </div>
-   <div>
+   <div v-if="followers">
   <ul class="list-group list-group-flush">
     <li class="list-group-item" v-for="follower in followers" :key="follower.id">
       <div >
@@ -19,7 +19,7 @@
           <img :src="follower.photo"  alt="User Photo" class="user-photo mx-auto d-block" >
           </a>
         </div>
-        <div>
+        <div >
           <div style="font-size: large;font-weight:bolder;padding-left: 100px;padding-top: 10px;">
            <a  @click="goToOrderUser(follower.id)"> {{ follower.userName}}</a>
           </div>
@@ -71,6 +71,7 @@
   <!-- <div v-if="isLoading" class="loading-message">Loading...</div> -->
  
   </div>
+  <div v-else>查無資料</div>
 </template>
     
 <script setup >
@@ -94,6 +95,9 @@ const router = useRouter();
 const isRemove = ref([]);
 
 const user = ref('')
+
+
+let searchTimeout = null;
 
 const addFollowingUser = ref({
   id:{  
@@ -146,12 +150,19 @@ const toggleRemoveMode = async (followerId) => {
 };
 
 const searchUsername = async()=>{
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+  searchTimeout = setTimeout(async () => {
  const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value}})
-
+console.log(response);
  followers.value = response;
     // user.value = response;
     
-    isLoading.value = false;
+    // isLoading.value = false;
+    if(response!=null){
+
+    
     followers.value.forEach((follower)=>{
       if(follower.photo==null){
         follower.photo ="/img/noImage.jpg"
@@ -162,6 +173,8 @@ const searchUsername = async()=>{
       user.value = follower
       isRemove.value[follower.id] = false;
     })
+  }
+}, 1000); // 延遲一秒後執行查詢
 }
 
 const addFollower = async(addFollowing)=>{

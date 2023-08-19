@@ -32,7 +32,7 @@
               </div>
     </div>
     <div >
-              <div v-if="!isRemove[user.id] && user.id">
+              <div v-if="!isRemove && user.id">
                 追蹤中
               </div>
               <div v-else >
@@ -93,6 +93,11 @@
     const router = useRouter();
     
     const user = ref({});
+
+    const isFav = ref({});
+
+  
+
     const photo = ref("")
     
     const userId = router.currentRoute.value.params.userId;
@@ -110,6 +115,12 @@
       
     const fetchUserData = async () => {
 
+  
+
+      const rep = await axiosGet('http://localhost:8080/user/findFollowingUsersByFollowing/'+userId,{withCredentials:true})
+      isFav.value = rep
+      console.log(isFav.value);
+
       const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
         user.value =response
         // console.log(user.value.photo);
@@ -119,11 +130,17 @@
             photo.value = decodeURIComponent(atob(user.value.photo))
             // console.log(photo.value);
           }
-            //  isRemove.value[user.id] = false;
+
+          if(isFav.value==null){
+            console.log(123);
+            isRemove.value= true;
+            
+          }else{
+            isRemove.value = false;
+            
+          }
 
 
-
-        
     };
     fetchUserData()
     
@@ -204,7 +221,7 @@
     const addFollower = async (userId)=>{
       addFollowingUser.value.id.following= userId
       await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
-      isRemove.value[userId] = false
+      isRemove.value = false
     
       // router.push({ name: "UserModify"})
     }
@@ -224,7 +241,7 @@
   
   if (user.value.id ==followerId) {
     await deleteUser(followerId);
-    isRemove.value[followerId] = !isRemove.value[followerId];
+    isRemove.value = !isRemove.value;
     // fetchUserData();
     } else {
    }
