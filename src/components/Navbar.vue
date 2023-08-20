@@ -51,9 +51,15 @@
     const photo = ref("")
 
     onMounted (async () => {
+      
+      console.log(123);
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response
+    console.log(response);
     // console.log(user.value.photo);
+    if(response==null){
+      return null
+    }
       if(user.value.photo==null || user.value.photo==""){
         photo.value ="/img/noImage.jpg"
       }else{

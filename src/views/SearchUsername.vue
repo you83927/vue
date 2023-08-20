@@ -182,9 +182,9 @@ const searchUsername = async()=>{
     clearTimeout(searchTimeout);
   }
   searchTimeout = setTimeout(async () => {
- const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value}})
-// console.log(response);
- followers.value = response;
+ const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value,page:0,size:5}})
+console.log(response.content);
+ followers.value = response.content;
     // user.value = response;
     
     isLoading.value = false;

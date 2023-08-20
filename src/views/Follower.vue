@@ -10,6 +10,7 @@
     />
    
   </div>
+  <div  class="scrollable-container" ref="dataList" @scroll="handleScroll"> 
    <div v-if="followers">
   <ul class="list-group list-group-flush">
     <li class="list-group-item" v-for="follower in followers" :key="follower.id">
@@ -72,6 +73,7 @@
  
   </div>
   <div v-else>查無資料</div>
+</div>
 </template>
     
 <script setup >
@@ -96,6 +98,9 @@ const isRemove = ref([]);
 
 const user = ref('')
 
+const dataList = ref(null);
+const items = ref([]);
+
 
 let searchTimeout = null;
 
@@ -111,8 +116,9 @@ const addFollowingUser = ref({
 
 
 const fetchUserData = async () => {
-    const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true});
-    followers.value = response;
+    const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:0,size:5}});
+    followers.value = response.content;
+    items.value = response.pageable
     // user.value = response;
     
     isLoading.value = false;
@@ -129,9 +135,45 @@ const fetchUserData = async () => {
 }
 fetchUserData()
 
+const handleScroll =async () => {
+  const list = dataList.value;
+  if (list) {
+    const threshold = 10;
+    const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+    if (isAtBottom && !isLoading.value) {
+      try {
+        const pageToLoad = items.value.pageNumber++
+        console.log(items.value);
+        const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:pageToLoad+1,size:5}});
+    
+    console.log(response.content);
+
+    response.content.forEach((follower)=>{
+      if(follower.photo==null){
+        follower.photo ="/img/noImage.jpg"
+        
+      }else{
+        follower.photo = atob(follower.photo)
+      }
+      // isRemove.value[follower.id] = true;
+    })
+    
+    console.log(followers.value);
+    followers.value = [...followers.value,...response.content];
+    
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+    }
+  }
+};
+
 const deleteUser = async(deleteId)=>{
   console.log(11111);
   const response = await axiosDelete('http://localhost:8080/user/deleteFollower/'+deleteId,{withCredentials:true})
+  
   swalSuccess(response)
   // location.reload()
   // fetchUserData()
@@ -156,6 +198,7 @@ const searchUsername = async()=>{
   searchTimeout = setTimeout(async () => {
  const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value}})
 console.log(response);
+
  followers.value = response;
     // user.value = response;
     

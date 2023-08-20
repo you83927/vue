@@ -4,33 +4,27 @@ import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import Navbar from './components/Navbar.vue';
 
-import { provide, ref, onMounted } from 'vue';
+import { provide, ref, onMounted ,watch } from 'vue';
 import axios from 'axios';
 import { axiosGet } from './global';
+import { useRouter} from 'vue-router';
 
-// const user = ref({});
-// // 初始化头像信息
-// const avatar = ref('');
+const router = useRouter()
+const isLoginPage = ref(false);
+console.log(router);
 
-// // 获取头像信息
-// onMounted(async () => {
-//   const response = await axiosGet('http://localhost:8080/user/detial', { withCredentials: true });
-//   user.value =response
-//   if (user.value.photo==null || user.value.photo=="") {
-//       avatar.value = '/img/noImage.jpg';
-// } else {
-//       avatar.value = decodeURIComponent(atob(user.value.photo));
-//   }
-// });
+// 使用 watch 監聽 $route 的變化
+watch(() => router.currentRoute.value, (to) => {
+  isLoginPage.value = to.name === 'Login';
+});
 
-// provide('avatar', avatar); 
 
 
 </script>
 
 <template>
     <div class="container">
-        <Navbar ></Navbar>
+        <Navbar v-if="!isLoginPage"></Navbar>
         <!-- <Navbar  :avatar="avatar"></Navbar> -->
         <router-view></router-view>
     </div>
