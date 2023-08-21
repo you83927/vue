@@ -50,7 +50,7 @@ library.add(faRotateLeft)
 library.add(faPizzaSlice)
 
 import HelloVue from "./components/HelloVue.vue";
-import Home from "./views/Home.vue";
+import Favorite from "./views/Favorite.vue";
 import About from "./views/About.vue"
 import Contact from "./views/Contact.vue"
 import Products from "./views/Products.vue"
@@ -69,9 +69,14 @@ const routers=[
     },
 
     {
+        path:'/favorite',
+        name:'Favorite',
+        component:Favorite
+    },
+    {
         path:'/',
-        name:'Home',
-        component:Home
+        name:'Login',
+        component:Login
     },
     {
         path:'/about',
@@ -87,11 +92,6 @@ const routers=[
         path:'/products',
         name:'Products',
         component:Products
-    },
-    {
-        path:'/login',
-        name:'Login',
-        component:Login
     },
     {
         path:'/userDetial',

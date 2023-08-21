@@ -1,0 +1,447 @@
+<template>
+       <h2>Favorite</h2>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="article" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" @click="changeTab('article')">Article</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="restaurant" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" @click="changeTab('restaurant')">Restaurant</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="food" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" @click="changeTab('food')">Food</button>
+  </li>
+
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+       <div v-if="activeTab === 'article'">
+          <!-- 在这里放置展示文章数据的代码 -->
+          <ul >
+            <li v-for="article in articles" :key="article[1].id" style="list-style-type: none;">
+              <div class="accordion" :id="article[1].id">
+  <div class="accordion-item" >
+
+    <el-card class="box-card" :id="'heading-' + article[1].id" >
+      
+      <div class="card-header"  style="display: flex;">
+        <div style="flex: 1;">
+          <div class="d-flex align-items-center justify-content-between m-3">
+            <a href="" style="font-size:xx-large"> {{ article[1].title }}</a>
+          </div>
+        </div>
+        <div style="flex ;" >
+          <div  class="user-photo-container2">
+            <a @click="goToOrderUser(article[0].id)">
+              <img :src="article[0].photo" alt="" class="user-photo mx-auto d-block">
+            </a>
+          </div>
+        </div>
+
+
+        <div style="flex ;" class="m-3">
+          <div   style="font-size:x-large">
+            <a  @click="goToOrderUser(article[0].id)">
+              {{article[0].userName}}
+            </a>
+          </div>
+  
+          <div   style="font-size:smaller">
+            {{article[0].nickName}}
+          </div>
+        </div>
+        <div style="flex ;">
+          <div class="m-3" >
+            <a >
+              {{ article[1].type ==1 ?"#食記":"#食譜"}}
+            </a>
+          </div>
+        </div>
+
+        <div style="flex ;">
+          <div class="m-3" >
+            {{ article[1].createdDate }}
+          </div>
+        </div>
+      </div>
+      <div class="accordion-body" style="font-size:larger;">
+        {{ article[1].context.length > 20? article[1].context.substring(0, 20) + '...more' : article[1].context }}
+
+      </div>
+  </el-card>
+
+    <!-- <h2 class="accordion-header" :id="'heading-' + article.id">
+      <div class="d-flex align-items-center justify-content-between">
+       <a href=""> {{ article.title }}</a>
+        <button :id="'accordion-button-' + article.id" class="accordion-button collapsed scaled-button"  type="button" :data-bs-toggle="'collapse'"
+        :data-bs-target="'#collapse-' + article.id"
+        :aria-expanded="false"
+        :aria-controls="'collapse-' + article.id"
+        >
+      </button>
+    </div>
+    </h2> -->
+    <!-- <div :id="'collapse-' + article.id" class="accordion-collapse collapse" :aria-labelledby="'heading-' + article.id">
+      <div class="accordion-body">
+        {{ article.context}}
+      </div>
+    </div> -->
+  </div>
+</div>
+
+            </li>
+          </ul>
+      
+        </div>
+  </div>
+
+
+
+  
+  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    <div v-if="activeTab === 'restaurant'">
+      <!-- 在这里放置展示餐厅数据的代码 -->
+      <ul>
+        
+        <li v-for="restaurant in restaurants" :key="restaurant.id">
+        
+  <el-descriptions
+    class="margin-top"
+  
+    :column="3"
+    :size="size"
+    border
+  >
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <user />
+          </el-icon>
+          餐廳
+        </div>
+      </template>
+      {{ restaurant.name }}
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <iphone />
+          </el-icon>
+          電話
+        </div>
+      </template>
+      {{ restaurant.phone }}
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <location />
+          </el-icon>
+          google map連結
+        </div>
+      </template>
+      <a :href="restaurant.url"><i class='bx bx-map-alt bx-sm' ></i></a>
+    </el-descriptions-item>
+
+
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <office-building />
+          </el-icon>
+          營業狀態
+        </div>
+      </template>
+      <div v-if="restaurant.status==1">正常營業 </div>
+      <div v-else-if="restaurant.status==2">暫時歇業</div>
+      <div v-else>永久停業</div>
+    </el-descriptions-item>
+    
+<el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <tickets />
+          </el-icon>
+          Google評價
+        </div>
+      </template>
+      <el-rate
+    v-model="restaurant.googleScore"
+    disabled
+    show-score
+    text-color="#ff9900"
+    score-template="{value} points"
+    size="small"
+  />
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <tickets />
+          </el-icon>
+          本站評價
+        </div>
+      </template>
+      <el-rate
+    v-model="restaurant.ourScore"
+    disabled
+    show-score
+    text-color="#ff9900"
+    score-template="{value} points"
+    size="small"
+  />
+    </el-descriptions-item>
+
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <tickets />
+          </el-icon>
+          店家官網
+        </div>
+      </template>
+      <a :href="restaurant.website">{{ restaurant.website }}</a>
+      
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <office-building />
+          </el-icon>
+          可否內用
+        </div>
+      </template>
+      <div v-if="restaurant.dineIn==true"><i class='bx bx-check bx-sm'></i></div>
+      <div v-else><i class='bx bx-x bx-sm'></i></div>
+  
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <office-building />
+          </el-icon>
+          可否外帶
+        </div>
+      </template>
+      <div v-if="restaurant.takeout==true"><i class='bx bx-check bx-sm'></i></div>
+      <div v-else><i class='bx bx-x bx-sm'></i></div>
+     
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <office-building />
+          </el-icon>
+          地址
+        </div>
+      </template>
+       {{ restaurant.address }}
+   
+    </el-descriptions-item>
+    
+  </el-descriptions>
+</li>
+
+
+
+
+</ul>
+        </div>
+  </div>
+  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+       <div v-if="activeTab === 'food'">
+        
+        <!-- 在这里放置展示食物数据的代码 -->
+        <ul>
+        <el-row >
+    <el-col
+      v-for="food in foods"
+      :key="food.id"
+      :span="5"
+      :offset="index > 0 ? 2 : 0"
+      class="m-3"
+    >
+      <el-card  :body-style="{ padding: '10px' }">
+        <img
+          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+          class="image"
+        />
+        <div style="padding: 10px">
+          <a href="" >
+            <span>{{ food.foodType }}</span>
+          </a>
+          <div class="bottom">
+            <time class="time">{{ currentDate }}</time>
+            <!-- <el-button text class="button">Operating</el-button> -->
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+          </ul>
+        </div>
+  </div>
+</div>
+
+</template>
+    
+<script setup >
+    import { ref, onMounted,computed } from 'vue';
+import axios from 'axios';
+import {axiosPost,axiosGet,axiosPut,axiosDelete} from '../global'
+import { useRouter } from 'vue-router';
+import {
+  Iphone,
+  Location,
+  OfficeBuilding,
+  Tickets,
+  User,
+} from '@element-plus/icons-vue'
+
+const router = useRouter();
+
+const activeTab = ref('article'); // 初始选中的选项卡类型，默认为文章
+const articles = ref([]);
+const restaurants = ref([]);
+const foods = ref([]);
+
+const articleUser = ref('');
+const restaurant = ref('');
+const food = ref('');
+// location.reload()
+
+onMounted(async () => {
+  await fetchData(activeTab.value);
+});
+// 在组件加载时获取文章数据
+const fetchData = async (tab) => {
+  try {
+       let response;
+       console.log(activeTab.value);
+    if (activeTab.value === 'article') {
+      response = await axiosGet('http://localhost:8080/user/favorite/articles',{withCredentials:true});
+      console.log(response);   
+      articles.value = response;
+      articles.value.forEach((article)=>{
+        console.log(article[0].userName);
+      articleUser.value = article[0]
+      // console.log(decodeURIComponent(atob(article[1].photo)));
+      if(article[0].photo==null){
+        article[0].photo ="/img/noImage.jpg"
+        
+      }else{
+        // article[1].photo ="/img/noImage.jpg"
+        article[0].photo = atob(article[0].photo)
+      }
+    })
+
+
+    
+
+    } else if (activeTab.value === 'restaurant') {
+      response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
+      console.log(response);
+      restaurants.value = response;
+    } else if (activeTab.value === 'food') {
+      response = await axiosGet('http://localhost:8080/user/favorite/foods',{withCredentials:true});
+      console.log(response);
+      foods.value = response;
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+  
+};
+
+const findOtherUsersById =async(userId)=>{
+  response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true});
+  
+  console.log(response);  
+}
+
+// 切换选项卡时更新数据
+function changeTab(tab) {
+  activeTab.value=tab;
+  fetchData(tab);
+}
+
+const goToOrderUser = async(userId)=>{
+ const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
+ const userDetial = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
+
+console.log(response.id);
+console.log(userDetial.id);
+
+if(response.id==userDetial.id){
+  router.push({path:"/userDetial"})
+}else{
+  router.push({path:"/otherUsers/"+userId})
+}
+
+}
+
+
+</script>
+    
+<style scoped>
+    .scaled-button {
+      transform: scale(0.8); /* 调整缩放值 */
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  background-color: lightskyblue; /* 为了演示，添加背景颜色 */
+  width: 24px; /* 设置按钮宽度 */
+  height: 24px; /* 设置按钮高度 */
+}
+
+.d-flex div {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.el-descriptions {
+  margin-top: 20px;
+}
+.cell-item {
+  display: flex;
+  align-items: center;
+}
+.margin-top {
+  margin-top: 20px;
+}
+
+.time {
+  font-size: 12px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  padding: 0;
+  min-height: auto;
+}
+
+.image {
+  width: 100%;
+  display: block;
+}
+
+</style>

@@ -65,7 +65,10 @@ const userName = ref('');
 const passWord = ref('');
 
 const router = useRouter();
+const users = ref({
 
+});
+const photo = ref("")
 const login = async  () => {
     const user = {
   userName: userName.value,
@@ -77,7 +80,7 @@ const login = async  () => {
   if (response === 'login success') {
     // localStorage.setItem('user', JSON.stringify(user))
     console.log(response);
-    router.push({ path: '/' });
+    router.push({ path: '/favorite' });
     
     // return response
     
@@ -88,7 +91,24 @@ const login = async  () => {
     console.error('An error occurred:', error);
     return error
   }
-  
+
+  const response1 = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
+    users.value =response1
+    // console.log(user.value.photo);
+      if(users.value.photo==null){
+        photo.value ="/img/noImage.jpg"
+      }else{
+        photo.value = decodeURIComponent(atob(users.value.photo))
+        console.log(users.value);
+      }
+      console.log(users.value);
+      sessionStorage.setItem('userId',users.value.id)
+      sessionStorage.setItem('userUsername',users.value.userName)
+      sessionStorage.setItem('userNickname',users.value.nickName)
+
+     const a = sessionStorage.getItem('userId')
+     const b = sessionStorage.getItem('userUsername')
+     const c = sessionStorage.getItem('userNickname')
     // .then((res) => {
     //   console.log(res);
     //     console.log(res.data);

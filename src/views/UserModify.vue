@@ -42,7 +42,8 @@
           </div>
             <input type="file" id="uploadPhoto"  style="display: none" @change="upload">
           </label>
-          <button type="button" class="btn btn-danger" @click="deletePhoto">刪除頭貼</button>
+          <el-button type="danger" plain @click="deletePhoto">刪除頭貼</el-button>
+          <!-- <button type="button" class="btn btn-danger" @click="deletePhoto">刪除頭貼</button> -->
           <div class="row g-3">
              
      
@@ -120,8 +121,10 @@
           <hr class="my-4">
 
 
-          <button class=" btn btn-primary btn-lg m-3" type="submit">編輯完成</button>
-          <button class=" btn btn-primary btn-lg " type="button" @click="back">返回</button>
+          <!-- <button class=" btn btn-primary btn-lg m-3" type="submit">編輯完成</button> -->
+          <el-button type="primary" plain @click="modify">編輯完成</el-button>
+          <!-- <button class=" btn btn-primary btn-lg " type="button" @click="back">返回</button> -->
+          <el-button plain @click="back">返回</el-button>
 
         </form>
       </div>
@@ -212,6 +215,7 @@ const handleGenderChange = (selectedGender) => {
 
 //更新
 const modify = async () => {
+  console.log(123);
   const updateUser = user.value
 
 if(photo.value ==null || photo.value == "/img/noImage.jpg"){

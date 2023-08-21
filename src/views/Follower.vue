@@ -27,12 +27,13 @@
           <div style="font-size: smaller;font-weight:lighter;padding-left: 100px;">
             {{ follower.nickName}}
           </div>
-          <div >
-              <div v-if="!isRemove[follower.id] || follower.id==user.id">
-                追蹤中
+          <div style="margin-left: 100px;">
+              <div v-if="!isRemove[follower.id] || follower.id==user.id" >
+                <el-button type="info" plain disabled>追蹤中</el-button>
               </div>
               <div v-else>
-                <button type="button" class="btn btn-info" @click="addFollower(follower.id)">追踪用戶</button>
+                <el-button type="primary" plain @click="addFollower(follower.id)">追踪用戶</el-button>
+                <!-- <button type="button" class="btn btn-info" @click="addFollower(follower.id)">追踪用戶</button> -->
               </div>
             </div>
             
@@ -53,8 +54,14 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item class="clearfix">
-                    <div  @click="toggleRemoveMode(follower.id)">刪除</div>
-                   
+                    <div v-if="!isRemove[follower.id] || follower.id==user.id" >
+                      <div  @click="toggleRemoveMode(follower.id)" >取消追蹤<i class='bx bx-x-circle '></i></div>
+                    </div>
+
+                    <div v-else>
+                      <div >取消追蹤<i class='bx bx-x-circle '></i></div>
+                    </div>
+                    <!-- <el-button type="danger" :icon="Delete" circle @click="toggleRemoveMode(follower.id)"/> -->
                   </el-dropdown-item>
                   <el-dropdown-item class="clearfix">
                     replies
@@ -81,7 +88,8 @@
   import axios from 'axios';
   import {axiosPost,axiosGet,axiosPut,axiosDelete, swalSuccess} from '../global'
   import { useRouter } from 'vue-router';
-  import { Search } from '@element-plus/icons-vue'
+  import { Search,Delete } from '@element-plus/icons-vue'
+
 
   const buttons = [
   { type: '', text: 'plain' },
@@ -216,7 +224,17 @@ console.log(response);
       user.value = follower
       isRemove.value[follower.id] = false;
     })
-  }
+  };
+
+       // 将滚动位置重置到顶部
+       nextTick(() => {
+        const list = dataList.value;
+        if (list) {
+          list.scrollTop = 0;
+        }
+      });
+
+
 }, 1000); // 延遲一秒後執行查詢
 }
 
@@ -228,7 +246,8 @@ const addFollower = async(addFollowing)=>{
   console.log(addFollowingUser.value.id.following);
   console.log(addFollowingUser.value);
   // await nextTick() 
-await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
+const response = await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
+swalSuccess(response)
 }
 
 
@@ -293,4 +312,8 @@ router.push({path:"otherUsers/"+userId})
   .flex{
     float:right
   }
+  .scrollable-container {
+  max-height: 400px; /* 設定最大高度，超過會顯示滾動條 */
+  overflow-y: auto; /* 添加垂直滾動條 */
+}
 </style>

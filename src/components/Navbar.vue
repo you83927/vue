@@ -7,7 +7,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link class="nav-link" to="/">Home</router-link>
         </li>
 
@@ -19,15 +19,15 @@
         </li>
         <li class="nav-item">
             <router-link class="nav-link" to="/follower">follower</router-link>
-        </li>
-        <div class="dropdown text-end ">
+        </li> -->
+        <div class="dropdown text-end" >
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img :src="photo" alt="mdo" width="50" class="rounded-circle">
+            <img :src="photo" alt="mdo" width="50" class="rounded-circle" >
           </a>
           <ul class="dropdown-menu text-small">
             <li> <router-link class="dropdown-item" to="/userDetial">用戶資料</router-link></li>
-            <li> <router-link class="dropdown-item" to="/follower">追蹤用戶</router-link></li>
-            <li><router-link class="dropdown-item" to="/">最愛</router-link></li>
+            <li> <router-link class="dropdown-item" to="/follower">追蹤中用戶</router-link></li>
+            <li><router-link class="dropdown-item" to="/favorite">最愛</router-link></li>
              <li><router-link class="dropdown-item" to="/searchUsername">搜尋</router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" @click="logOut">登出</a></li>
@@ -72,7 +72,7 @@
     const logOut =async () => {
     const response= await axiosPost('http://localhost:8080/user/logout',{},{withCredentials:true})
       // console.log(response);
-      router.push({name:"Login"})
+      router.push({path:"/"})
     
 }
 </script>
@@ -101,4 +101,10 @@
     object-fit: cover;
    
   }
+
+  .dropdown.text-end {
+  position: absolute;
+  right: 10px; /* 调整右边距 */
+  bottom: 10px;
+}
 </style>

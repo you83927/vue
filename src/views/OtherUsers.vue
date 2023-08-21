@@ -19,8 +19,12 @@
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item class="clearfix">
-                        <div  @click="toggleRemoveMode(user.id)">刪除</div>
-                        
+              <div v-if="!isRemove && user.id">
+                <div  @click="toggleRemoveMode(user.id)">取消追蹤<i class='bx bx-x-circle '></i></div>
+              </div>
+              <div v-else >
+                <div >取消追蹤<i class='bx bx-x-circle '></i></div>
+                </div>
                       </el-dropdown-item>
                       <el-dropdown-item class="clearfix">
                         replies
@@ -33,10 +37,11 @@
     </div>
     <div >
               <div v-if="!isRemove && user.id">
-                追蹤中
+                <el-button type="info" plain disabled>追蹤中</el-button>
               </div>
               <div v-else >
-                <button type="button" class="btn btn-info" @click="addFollower(user.id)">追踪用戶</button>
+         
+                 <el-button type="primary" plain @click="addFollower(user.id)">追蹤用戶</el-button>
               </div>
            
 
@@ -81,6 +86,7 @@
         import { useRouter } from 'vue-router';
         import {axiosPost,axiosGet,axiosDelete, swalSuccess} from '../global'
 
+         import { Search,Delete } from '@element-plus/icons-vue'
         const buttons = [
   { type: '', text: 'plain' },
  
@@ -220,7 +226,9 @@
     
     const addFollower = async (userId)=>{
       addFollowingUser.value.id.following= userId
-      await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
+      const response = await axiosPost('http://localhost:8080/user/insertFollower',addFollowingUser.value,{withCredentials:true})
+
+       swalSuccess(response)
       isRemove.value = false
     
       // router.push({ name: "UserModify"})

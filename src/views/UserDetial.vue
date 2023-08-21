@@ -32,9 +32,8 @@
 <div v-else>
   Loading user data...
 </div>
-
-<button class="btn btn-info m-3" type="butten" @click="showModify">編輯基本資料</button>
-<button class="btn btn-info" type="butten" @click="showPrivacySetting">更改密碼</button>
+<el-button type="info" plain class="btn btn-info m-3"  @click="showModify">編輯基本資料</el-button>
+<el-button type="warning" plain class="btn btn-info" @click="showPrivacySetting">更改密碼</el-button>
 
 </template>
     
@@ -56,7 +55,8 @@ const photo = ref("")
 
   
 const fetchUserData = async () => {
-  
+  const a = sessionStorage.getItem('user')
+      console.log(a);
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response
     // console.log(user.value.photo);

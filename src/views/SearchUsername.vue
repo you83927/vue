@@ -199,7 +199,17 @@ console.log(response.content);
       user.value = follower
       // isRemove.value[follower.id] = false;
       })
-    }
+    };
+
+     // 将滚动位置重置到顶部
+     nextTick(() => {
+        const list = dataList.value;
+        if (list) {
+          list.scrollTop = 0;
+        }
+      });
+
+      
   }, 1000); // 延遲一秒後執行查詢
 }
  
@@ -211,9 +221,9 @@ console.log(response.id);
 console.log(userDetial.id);
 
 if(response.id==userDetial.id){
-  router.push({path:"userDetial"})
+  router.push({path:"/userDetial"})
 }else{
-  router.push({path:"otherUsers/"+userId})
+  router.push({path:"/otherUsers/"+userId})
 }
 
 }
