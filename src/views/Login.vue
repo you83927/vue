@@ -6,11 +6,11 @@
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="userName">
+      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="username">
       <label for="floatingInput">Email address</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="passWord">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
       <label for="floatingPassword">Password</label>
     </div>
     
@@ -61,8 +61,8 @@ import {axiosPost,axiosGet,axiosPut,swalSuccess} from '../global'
 
 const URL = import.meta.env.VITE_API_JAVAURL
 
-const userName = ref('');
-const passWord = ref('');
+const username = ref('');
+const password = ref('');
 
 const router = useRouter();
 const users = ref({
@@ -71,8 +71,8 @@ const users = ref({
 const photo = ref("")
 const login = async  () => {
     const user = {
-  userName: userName.value,
-  passWord: passWord.value
+  username: username.value,
+  password: password.value
 };
 
   try {

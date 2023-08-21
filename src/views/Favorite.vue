@@ -19,7 +19,7 @@
           <!-- 在这里放置展示文章数据的代码 -->
           <ul >
             <li v-for="article in articles" :key="article[1].id" style="list-style-type: none;">
-              <div class="accordion" :id="article[1].id">
+              <div class="accordion m-3" :id="article[1].id">
   <div class="accordion-item" >
 
     <el-card class="box-card" :id="'heading-' + article[1].id" >
@@ -42,12 +42,12 @@
         <div style="flex ;" class="m-3">
           <div   style="font-size:x-large">
             <a  @click="goToOrderUser(article[0].id)">
-              {{article[0].userName}}
+              {{article[0].username}}
             </a>
           </div>
   
           <div   style="font-size:smaller">
-            {{article[0].nickName}}
+            {{article[0].nickname}}
           </div>
         </div>
         <div style="flex ;">
@@ -161,24 +161,6 @@
       <div v-else>永久停業</div>
     </el-descriptions-item>
     
-<el-descriptions-item>
-      <template #label>
-        <div class="cell-item">
-          <el-icon :style="iconStyle">
-            <tickets />
-          </el-icon>
-          Google評價
-        </div>
-      </template>
-      <el-rate
-    v-model="restaurant.googleScore"
-    disabled
-    show-score
-    text-color="#ff9900"
-    score-template="{value} points"
-    size="small"
-  />
-    </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
@@ -197,6 +179,26 @@
     size="small"
   />
     </el-descriptions-item>
+
+<el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <tickets />
+          </el-icon>
+          Google評價
+        </div>
+      </template>
+      <el-rate
+    v-model="restaurant.googleScore"
+    disabled
+    show-score
+    text-color="#ff9900"
+    score-template="{value} points"
+    size="small"
+  />
+    </el-descriptions-item>
+
 
     <el-descriptions-item>
       <template #label>
@@ -271,10 +273,11 @@
       :offset="index > 0 ? 2 : 0"
       class="m-3"
     >
-      <el-card  :body-style="{ padding: '10px' }">
+      <el-card  :body-style="{ padding: '10px' }" >
         <img
-          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+          :src="'public/foodImage/'+food.id+'.jpg'"
           class="image"
+        
         />
         <div style="padding: 10px">
           <a href="" >
@@ -440,8 +443,10 @@ if(response.id==userDetial.id){
 }
 
 .image {
-  width: 100%;
+  width: 300px;
+  height: 150px;
   display: block;
+  object-fit: contain
 }
 
 </style>

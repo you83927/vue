@@ -8,7 +8,7 @@
 
 
    <ul class="list-group list-group-flush" v-if="user">
-  <li class="list-group-item" >使用者 : {{ user.userName}}</li>
+  <li class="list-group-item" >使用者 : {{ user.username}}</li>
   <li class="list-group-item">身份 : {{ identityString}}</li>
 
   <li class="list-group-item" v-if="showNickName" >暱稱 : {{showNickName}}</li>
@@ -106,10 +106,10 @@ const showEmail = computed(()=>{
 
 
 const showNickName = computed(()=>{
-if(user.value.nickName==null ||user.value.nickName==""){
+if(user.value.nickname==null ||user.value.nickname==""){
   return null
 }
-return user.value.nickName
+return user.value.nickname
 })
 
 const showBirthday = computed(()=>{

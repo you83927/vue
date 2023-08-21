@@ -21,10 +21,10 @@
         </div>
         <div>
           <div style="font-size: large;font-weight:bolder;padding-left: 100px;padding-top: 10px;">
-           <a  @click="goToOrderUser(follower.id)"> {{ follower.userName}}</a>
+           <a  @click="goToOrderUser(follower.id)"> {{ follower.username}}</a>
           </div>
           <div style="font-size: smaller;font-weight:lighter;padding-left: 100px;">
-            {{ follower.nickName}}
+            {{ follower.nickname}}
           </div>
           <!-- <div >
               <div v-if="!isRemove[follower.id] || follower.id==user.id">

@@ -22,10 +22,10 @@
         </div>
         <div >
           <div style="font-size: large;font-weight:bolder;padding-left: 100px;padding-top: 10px;">
-           <a  @click="goToOrderUser(follower.id)"> {{ follower.userName}}</a>
+           <a  @click="goToOrderUser(follower.id)"> {{ follower.username}}</a>
           </div>
           <div style="font-size: smaller;font-weight:lighter;padding-left: 100px;">
-            {{ follower.nickName}}
+            {{ follower.nickname}}
           </div>
           <div style="margin-left: 100px;">
               <div v-if="!isRemove[follower.id] || follower.id==user.id" >
@@ -125,6 +125,7 @@ const addFollowingUser = ref({
 
 const fetchUserData = async () => {
     const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:0,size:5}});
+    console.log(response);
     followers.value = response.content;
     items.value = response.pageable
     // user.value = response;
