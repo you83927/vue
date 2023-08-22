@@ -112,11 +112,12 @@ const handleScroll =async () => {
   if (list) {
     const threshold = 10;
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+    console.log(list.clientHeight);
     if (isAtBottom && !isLoading.value) {
       try {
         const pageToLoad = items.value.pageNumber++
         console.log(pageToLoad);
-    const response = await axiosPost('http://localhost:8080/user/findAllUser',{},{params: { page: pageToLoad+1, size: 5 }},{withCredentials:true});
+    const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{params: {userName: input1.value,page: pageToLoad+1, size: 5 }},{withCredentials:true});
     
     console.log(response.content);
 
@@ -182,6 +183,7 @@ const searchUsername = async()=>{
     clearTimeout(searchTimeout);
   }
   searchTimeout = setTimeout(async () => {
+    const a = sessionStorage.getItem('userId')
  const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value,page:0,size:5}})
 console.log(response.content);
  followers.value = response.content;

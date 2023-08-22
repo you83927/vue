@@ -50,7 +50,7 @@
     <!-- <p >当前用户的 ID：{{ $route.params.userId }}</p> -->
     
        <ul class="list-group list-group-flush" v-if="user">
-      <li class="list-group-item" >使用者 : {{ user.userName}}</li>
+      <li class="list-group-item" >使用者 : {{ user.username}}</li>
       <li class="list-group-item">身份 : {{ identityString}}</li>
     
       <li class="list-group-item" v-if="showNickName" >暱稱 : {{showNickName}}</li>
@@ -121,9 +121,10 @@
       
     const fetchUserData = async () => {
 
-  
+      const a = sessionStorage.getItem('userId')
 
-      const rep = await axiosGet('http://localhost:8080/user/findFollowingUsersByFollowing/'+userId,{withCredentials:true})
+      const rep = await axiosGet('http://localhost:8080/user/findFollowingUsersByFollowing',{withCredentials:true,params:{userId:a,following:userId}})
+      console.log(rep);
       isFav.value = rep
       console.log(isFav.value);
 
@@ -187,10 +188,10 @@
     
     
     const showNickName = computed(()=>{
-    if(user.value.nickName==null ||user.value.nickName==""){
+    if(user.value.nickname==null ||user.value.nickname==""){
       return null
     }
-    return user.value.nickName
+    return user.value.nickname
     })
     
     const showBirthday = computed(()=>{

@@ -1,4 +1,5 @@
 <template>
+  <div><i class="fa-brands fa-google"></i></div>
   <div class="demo-input-size">
     <el-input
       v-model="input1"
@@ -10,6 +11,7 @@
     />
    
   </div>
+
   <div  class="scrollable-container" ref="dataList" @scroll="handleScroll"> 
    <div v-if="followers">
   <ul class="list-group list-group-flush">
@@ -123,6 +125,7 @@ const addFollowingUser = ref({
 
 
 
+
 const fetchUserData = async () => {
     const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:0,size:5}});
     console.log(response);
@@ -205,7 +208,9 @@ const searchUsername = async()=>{
     clearTimeout(searchTimeout);
   }
   searchTimeout = setTimeout(async () => {
- const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value}})
+    const a = sessionStorage.getItem('userId')
+    console.log(a);
+ const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value,id:a}})
 console.log(response);
 
  followers.value = response;
@@ -253,6 +258,7 @@ swalSuccess(response)
 
 
 const goToOrderUser = async(userId)=>{
+
  const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
 
 console.log(response);
@@ -314,7 +320,13 @@ router.push({path:"otherUsers/"+userId})
     float:right
   }
   .scrollable-container {
-  max-height: 400px; /* 設定最大高度，超過會顯示滾動條 */
-  overflow-y: auto; /* 添加垂直滾動條 */
+  max-height:600px; /* 設定最大高度，超過會顯示滾動條 */
+
+  overflow-y:scroll; /* 添加垂直滾動條 */
+  position:auto;
+  /* top: 0; */
+  /* left: 0; */
+  width: 100%;
+  height: 100%;
 }
 </style>

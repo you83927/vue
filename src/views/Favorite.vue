@@ -1,6 +1,6 @@
 <template>
        <h2>Favorite</h2>
-
+<!-- 標籤 -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link active" id="article" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" @click="changeTab('article')">Article</button>
@@ -11,20 +11,28 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="food" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" @click="changeTab('food')">Food</button>
   </li>
-
 </ul>
+
 <div class="tab-content" id="myTabContent">
+  <!-- 文章 -->
   <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
        <div v-if="activeTab === 'article'">
           <!-- 在这里放置展示文章数据的代码 -->
           <ul >
             <li v-for="article in articles" :key="article[1].id" style="list-style-type: none;">
+              
               <div class="accordion m-3" :id="article[1].id">
   <div class="accordion-item" >
 
     <el-card class="box-card" :id="'heading-' + article[1].id" >
-      
+    
+          <div class="" >
+            <el-button type="info" plain  @click="deleteFavoriteArticle(article[1].id)" style="float: right;" :icon="Delete"/>
+          </div>
+
+
       <div class="card-header"  style="display: flex;">
+        
         <div style="flex: 1;">
           <div class="d-flex align-items-center justify-content-between m-3">
             <a href="" style="font-size:xx-large"> {{ article[1].title }}</a>
@@ -63,13 +71,20 @@
             {{ article[1].createdDate }}
           </div>
         </div>
+ 
+        
       </div>
       <div class="accordion-body" style="font-size:larger;">
         {{ article[1].context.length > 20? article[1].context.substring(0, 20) + '...more' : article[1].context }}
-
       </div>
-  </el-card>
-
+      
+    </el-card>
+    
+  </div>
+  </div>
+  
+            </li>
+          </ul>
     <!-- <h2 class="accordion-header" :id="'heading-' + article.id">
       <div class="d-flex align-items-center justify-content-between">
        <a href=""> {{ article.title }}</a>
@@ -86,36 +101,42 @@
         {{ article.context}}
       </div>
     </div> -->
-  </div>
-</div>
-
-            </li>
-          </ul>
       
         </div>
   </div>
+<!-- ----------------------------------------------------------------------------------------------------------------- -->
 
 
-
-  
+  <!-- 餐廳 -->
   <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    <div class="scrollable-container" ref="dataList" @scroll="handleScroll">
     <div v-if="activeTab === 'restaurant'">
+      <div class="demo-input-size">
+    <el-input
+      v-model="Rinput"
+      class="w-50 m-2"
+      size="large"
+      placeholder="Please Input"
+      :prefix-icon="Search"
+      @input="searchRestaurant"
+    /> 
+  </div>
       <!-- 在这里放置展示餐厅数据的代码 -->
       <ul>
-        
         <li v-for="restaurant in restaurants" :key="restaurant.id">
+          <el-button type="info" plain style="float: right;" :icon="Delete"  @click="deleteFavoriteRestaurant(restaurant.id)" />
         
   <el-descriptions
     class="margin-top"
   
     :column="3"
-    :size="size"
+ 
     border
   >
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <user />
           </el-icon>
           餐廳
@@ -126,7 +147,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <iphone />
           </el-icon>
           電話
@@ -137,7 +158,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon>
             <location />
           </el-icon>
           google map連結
@@ -150,7 +171,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <office-building />
           </el-icon>
           營業狀態
@@ -164,7 +185,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <tickets />
           </el-icon>
           本站評價
@@ -183,7 +204,7 @@
 <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <tickets />
           </el-icon>
           Google評價
@@ -203,7 +224,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <tickets />
           </el-icon>
           店家官網
@@ -215,7 +236,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <office-building />
           </el-icon>
           可否內用
@@ -228,7 +249,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <office-building />
           </el-icon>
           可否外帶
@@ -241,7 +262,7 @@
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          <el-icon :style="iconStyle">
+          <el-icon >
             <office-building />
           </el-icon>
           地址
@@ -259,7 +280,11 @@
 
 </ul>
         </div>
+      </div>
   </div>
+  <!-- ------------------------------------------------------------------------------------ -->
+
+  <!-- 食物 -->
   <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
        <div v-if="activeTab === 'food'">
         
@@ -274,6 +299,7 @@
       class="m-3"
     >
       <el-card  :body-style="{ padding: '10px' }" >
+        <el-button type="info" plain style="float: right;" :icon="Delete"  @click="deleteFavoriteFoodType(food.id)" />
         <img
           :src="'public/foodImage/'+food.id+'.jpg'"
           class="image"
@@ -294,17 +320,20 @@
           </ul>
         </div>
   </div>
+  <!-- ------------------------------------------------------------------------------------ -->
 </div>
 
 </template>
     
 <script setup >
-    import { ref, onMounted,computed } from 'vue';
+    import { ref, onMounted,computed ,nextTick} from 'vue';
 import axios from 'axios';
 import {axiosPost,axiosGet,axiosPut,axiosDelete} from '../global'
 import { useRouter } from 'vue-router';
 import {
+  Search,
   Iphone,
+  Delete,
   Location,
   OfficeBuilding,
   Tickets,
@@ -322,16 +351,21 @@ const articleUser = ref('');
 const restaurant = ref('');
 const food = ref('');
 // location.reload()
+let searchTimeout = null;
+const Rinput = ref('')
+const dataList = ref(null);
+const isLoading = ref(true);
 
 onMounted(async () => {
   await fetchData(activeTab.value);
 });
 // 在组件加载时获取文章数据
 const fetchData = async (tab) => {
+  const a = sessionStorage.getItem('userId')
   try {
        let response;
        console.log(activeTab.value);
-    if (activeTab.value === 'article') {
+    if (tab === 'article') {
       response = await axiosGet('http://localhost:8080/user/favorite/articles',{withCredentials:true});
       console.log(response);   
       articles.value = response;
@@ -351,11 +385,12 @@ const fetchData = async (tab) => {
 
     
 
-    } else if (activeTab.value === 'restaurant') {
-      response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
+    } else if (tab === 'restaurant') {
+      // response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
+      const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:'',page:0,size:3}})
       console.log(response);
-      restaurants.value = response;
-    } else if (activeTab.value === 'food') {
+      restaurants.value = response.content;
+    } else if (tab === 'food') {
       response = await axiosGet('http://localhost:8080/user/favorite/foods',{withCredentials:true});
       console.log(response);
       foods.value = response;
@@ -393,7 +428,119 @@ if(response.id==userDetial.id){
 
 }
 
+const deleteFavoriteArticle = async(aId)=>{
+  if(aId!=null){
+    const confirmed = window.confirm("确定要删除吗？");
+    if (confirmed){
 
+      const a = sessionStorage.getItem('userId')
+      console.log(a);
+      console.log(aId);
+      const response = await axiosDelete('http://localhost:8080/user/favorite/delete/article',{withCredentials:true,params:{userId:a,articleId:aId}})
+       window.setTimeout(function () {
+             window.location.reload();
+      },1000)
+    }  
+  }
+}
+
+
+
+
+const deleteFavoriteRestaurant = async(rId)=>{
+  if(rId!=null){
+    const confirmed = window.confirm("确定要删除吗？");
+    if (confirmed){
+
+      const a = sessionStorage.getItem('userId')
+      console.log(a);
+      console.log(rId);
+      const response = await axiosDelete('http://localhost:8080/user/favorite/delete/restaurant',{withCredentials:true,params:{userId:a,restaurantId:rId}})
+       window.setTimeout(function () {
+             window.location.reload();
+      },1000)
+    }  
+  }
+}
+
+
+
+const deleteFavoriteFoodType = async(fId)=>{
+  if(fId!=null){
+    const confirmed = window.confirm("确定要删除吗？");
+    if (confirmed){
+
+      const a = sessionStorage.getItem('userId')
+      console.log(a);
+      console.log(fId);
+      const response = await axiosDelete('http://localhost:8080/user/favorite/delete/food',{withCredentials:true,params:{userId:a,foodId:fId}})
+       window.setTimeout(function () {
+             window.location.reload();
+      },1000)
+    }  
+  }
+}
+
+const searchRestaurant = async()=>{ 
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+  searchTimeout = setTimeout(async () => {
+    const a = sessionStorage.getItem('userId')
+ const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page:0,size:3}})
+console.log(response.content);
+restaurants.value = response.content;
+
+
+     // 将滚动位置重置到顶部
+     nextTick(() => {
+        const list = dataList.value;
+        if (list) {
+          list.scrollTop = 0;
+        }
+      });
+
+      
+  }, 1000); // 延遲一秒後執行查詢
+}
+
+const handleScroll =async () => {
+  const list = dataList.value;
+  const a = sessionStorage.getItem('userId')
+  if (list) {
+    // console.log(list);
+    const threshold = 10;
+    const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+    console.log(isAtBottom);
+    if (isAtBottom && !isLoading.value) {
+      try {
+        const pageToLoad = items.value.pageNumber++
+        console.log(pageToLoad);
+    // const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{params: {userName: Rinput.value,page: pageToLoad+1, size: 3 }},{withCredentials:true});
+    const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page: pageToLoad+1,size:3}})
+    console.log(response.content);
+
+    response.content.forEach((follower)=>{
+      if(follower.photo==null){
+        follower.photo ="/img/noImage.jpg"
+        
+      }else{
+        follower.photo = atob(follower.photo)
+      }
+      // isRemove.value[follower.id] = true;
+    })
+  
+    followers.value = [...followers.value,...response.content];
+    
+    console.log(followers.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+    }
+  }
+};
 </script>
     
 <style scoped>
@@ -449,4 +596,8 @@ if(response.id==userDetial.id){
   object-fit: contain
 }
 
+.scrollable-container {
+  max-height: 400px; /* 設定最大高度，超過會顯示滾動條 */
+  overflow-y: auto; /* 添加垂直滾動條 */
+}
 </style>
