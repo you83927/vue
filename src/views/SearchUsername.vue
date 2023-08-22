@@ -110,10 +110,12 @@ onMounted(() => {
 const handleScroll =async () => {
   const list = dataList.value;
   if (list) {
-    const threshold = 10;
+    const threshold = 0;
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
-    console.log(list.clientHeight);
     if (isAtBottom && !isLoading.value) {
+
+
+
       try {
         const pageToLoad = items.value.pageNumber++
         console.log(pageToLoad);
@@ -137,7 +139,7 @@ const handleScroll =async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
-    isLoading.value = false;
+    // isLoading.value = false;
   }
     }
   }
@@ -182,6 +184,10 @@ const searchUsername = async()=>{
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
+    // 清空已加载的数据和页码
+    followers.value = [];
+  items.value = { pageNumber: -1 };
+
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
  const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value,page:0,size:5}})

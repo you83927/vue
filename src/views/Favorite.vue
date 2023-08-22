@@ -109,18 +109,18 @@
 
   <!-- 餐廳 -->
   <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    <div class="demo-input-size">
+  <el-input
+    v-model="Rinput"
+    class="w-50 m-2"
+    size="large"
+    placeholder="Please Input"
+    :prefix-icon="Search"
+    @input="searchRestaurant"
+  /> 
+</div>
     <div class="scrollable-container" ref="dataList" @scroll="handleScroll">
     <div v-if="activeTab === 'restaurant'">
-      <div class="demo-input-size">
-    <el-input
-      v-model="Rinput"
-      class="w-50 m-2"
-      size="large"
-      placeholder="Please Input"
-      :prefix-icon="Search"
-      @input="searchRestaurant"
-    /> 
-  </div>
       <!-- 在这里放置展示餐厅数据的代码 -->
       <ul>
         <li v-for="restaurant in restaurants" :key="restaurant.id">
@@ -355,10 +355,12 @@ let searchTimeout = null;
 const Rinput = ref('')
 const dataList = ref(null);
 const isLoading = ref(true);
+const items = ref([]);
 
 onMounted(async () => {
   await fetchData(activeTab.value);
 });
+
 // 在组件加载时获取文章数据
 const fetchData = async (tab) => {
   const a = sessionStorage.getItem('userId')
@@ -366,6 +368,8 @@ const fetchData = async (tab) => {
        let response;
        console.log(activeTab.value);
     if (tab === 'article') {
+      fetchData('restaurant');
+       fetchData('food');
       response = await axiosGet('http://localhost:8080/user/favorite/articles',{withCredentials:true});
       console.log(response);   
       articles.value = response;
@@ -389,7 +393,9 @@ const fetchData = async (tab) => {
       // response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
       const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:'',page:0,size:3}})
       console.log(response);
+      isLoading.value = false;
       restaurants.value = response.content;
+      items.value = response.pageable
     } else if (tab === 'food') {
       response = await axiosGet('http://localhost:8080/user/favorite/foods',{withCredentials:true});
       console.log(response);
@@ -410,7 +416,11 @@ const findOtherUsersById =async(userId)=>{
 // 切换选项卡时更新数据
 function changeTab(tab) {
   activeTab.value=tab;
-  fetchData(tab);
+    // 清空搜索栏的内容
+    if (tab != 'restaurant') {
+    Rinput.value = ''; // 清空餐厅搜索栏内容
+    fetchData(tab);
+  }
 }
 
 const goToOrderUser = async(userId)=>{
@@ -485,13 +495,18 @@ const searchRestaurant = async()=>{
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
+      // 清空已加载的数据和页码
+      restaurants.value = [];
+  items.value = { pageNumber: 0 };
+  
+
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
  const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page:0,size:3}})
 console.log(response.content);
 restaurants.value = response.content;
 
-
+isLoading.value = false;
      // 将滚动位置重置到顶部
      nextTick(() => {
         const list = dataList.value;
@@ -512,27 +527,29 @@ const handleScroll =async () => {
     const threshold = 10;
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
     console.log(isAtBottom);
+    console.log(isLoading.value);
     if (isAtBottom && !isLoading.value) {
       try {
+        
         const pageToLoad = items.value.pageNumber++
         console.log(pageToLoad);
     // const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{params: {userName: Rinput.value,page: pageToLoad+1, size: 3 }},{withCredentials:true});
     const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page: pageToLoad+1,size:3}})
-    console.log(response.content);
+    console.log(response);
 
-    response.content.forEach((follower)=>{
-      if(follower.photo==null){
-        follower.photo ="/img/noImage.jpg"
+    // response.content.forEach((follower)=>{
+    //   if(follower.photo==null){
+    //     follower.photo ="/img/noImage.jpg"
         
-      }else{
-        follower.photo = atob(follower.photo)
-      }
-      // isRemove.value[follower.id] = true;
-    })
+    //   }else{
+    //     follower.photo = atob(follower.photo)
+    //   }
+    //   // isRemove.value[follower.id] = true;
+    // })
   
-    followers.value = [...followers.value,...response.content];
+    restaurants.value = [...restaurants.value,...response.content];
     
-    console.log(followers.value);
+    console.log(restaurants.value);
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
