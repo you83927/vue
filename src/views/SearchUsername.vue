@@ -258,7 +258,7 @@ if(response.id==userDetial.id){
     
 <style>
     .scrollable-container {
-  max-height: 600px; /* 設定最大高度，超過會顯示滾動條 */
+  max-height: 500px; /* 設定最大高度，超過會顯示滾動條 */
   overflow-y: auto; /* 添加垂直滾動條 */
 }
 </style>

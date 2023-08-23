@@ -86,7 +86,7 @@
         
       </div>
       <div class="accordion-body" style="font-size:larger;">
-        {{ article[1].context.length > 20? article[1].context.substring(0, 20) + '...more' : article[1].context }}
+        {{ article[1].context.length > 20? article[1].context.substring(0, 20) + `...` : article[1].context }}
       </div>
       
     </el-card>
@@ -763,7 +763,14 @@ if(tab=="food"){
 }
 
 .scrollable-container {
-  max-height: 600px; /* 設定最大高度，超過會顯示滾動條 */
+  max-height: 500px; /* 設定最大高度，超過會顯示滾動條 */
   overflow-y: auto; /* 添加垂直滾動條 */
 }
+
+.accordion-body .more {
+    font-size: 16px; /* 這裡是你想要的字型大小 */
+    font-family: Arial, sans-serif; /* 這裡是你想要的字型 */
+    color: #333; /* 這裡是你想要的顏色 */
+    /* 可以加入其他的 CSS 樣式，例如加粗、斜體等 */
+  }
 </style>
