@@ -9,9 +9,10 @@
       @input="searchUsername"
     /> 
   </div>
+  
   <div class="scrollable-container" ref="dataList" @scroll="handleScroll">
   <div v-if="followers">
-  <ul class="list-group list-group-flush">
+  <ul class="list-group list-group-flush"   v-infinite-scroll="load"  :infinite-scroll-disabled="disabled">
     <li class="list-group-item" v-for="follower in followers" :key="follower.id">
       <div >
         <div class="user-photo-container2" style=" float:left">
@@ -67,6 +68,8 @@
           </div>
         </div>
     </li>
+    <p v-if="loading">Loading...</p>
+    <p v-if="noMore">No more</p>
   </ul>
   <!-- <div v-if="isLoading" class="loading-message">Loading...</div> -->
  
@@ -85,6 +88,18 @@
  const buttons = [
   { type: '', text: 'plain' },
 ] 
+
+// const count = ref(10)
+const loading = ref(false)
+const noMore = computed(() => followers.value >= 20)
+const disabled = computed(() => loading.value || noMore.value)
+const load = () => {
+  loading.value = true
+  setTimeout(() => {
+    count.value += 2
+    loading.value = false
+  }, 1000)
+}
 
  const input1 = ref('')
 
@@ -119,7 +134,7 @@ const handleScroll =async () => {
       try {
         const pageToLoad = items.value.pageNumber++
         console.log(pageToLoad);
-    const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{params: {userName: input1.value,page: pageToLoad+1, size: 5 }},{withCredentials:true});
+    const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{params: {userName: input1.value,page: pageToLoad+1, size: 6 }},{withCredentials:true});
     
     console.log(response.content);
 
@@ -139,7 +154,7 @@ const handleScroll =async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
-    // isLoading.value = false;
+    isLoading.value = false;
   }
     }
   }
@@ -156,7 +171,7 @@ const handleScroll =async () => {
 // })
  
     const fetchUserData = async () => {
-    const response = await axiosPost('http://localhost:8080/user/findAllUser',{},{params: {page:0, size:5 }},{withCredentials:true});
+    const response = await axiosPost('http://localhost:8080/user/findAllUser',{},{params: {page:0, size:6 }},{withCredentials:true});
     // console.log(response);
     followers.value = response.content;
     items.value = response.pageable
@@ -186,11 +201,11 @@ const searchUsername = async()=>{
   }
     // 清空已加载的数据和页码
     followers.value = [];
-  items.value = { pageNumber: -1 };
+  items.value = { pageNumber: 0 };
 
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
- const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value,page:0,size:5}})
+ const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{withCredentials:true, params:{userName:input1.value,page:0,size:6}})
 console.log(response.content);
  followers.value = response.content;
     // user.value = response;
@@ -243,7 +258,7 @@ if(response.id==userDetial.id){
     
 <style>
     .scrollable-container {
-  max-height: 400px; /* 設定最大高度，超過會顯示滾動條 */
+  max-height: 600px; /* 設定最大高度，超過會顯示滾動條 */
   overflow-y: auto; /* 添加垂直滾動條 */
 }
 </style>

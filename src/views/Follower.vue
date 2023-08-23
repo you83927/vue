@@ -155,7 +155,7 @@ const handleScroll =async () => {
     if (isAtBottom && !isLoading.value) {
       try {
         const pageToLoad = items.value.pageNumber++
-        console.log(items.value);
+        console.log(pageToLoad);
         const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:pageToLoad+1,size:5}});
     
     console.log(response.content);
@@ -210,7 +210,7 @@ const searchUsername = async()=>{
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
     console.log(a);
- const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value,id:a}})
+ const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value,id:a,page:0,size:5}})
 console.log(response);
 
  followers.value = response;
@@ -322,11 +322,7 @@ router.push({path:"otherUsers/"+userId})
   .scrollable-container {
   max-height:600px; /* 設定最大高度，超過會顯示滾動條 */
 
-  overflow-y:scroll; /* 添加垂直滾動條 */
-  position:auto;
-  /* top: 0; */
-  /* left: 0; */
-  width: 100%;
-  height: 100%;
+  overflow-y:auto; /* 添加垂直滾動條 */
+ 
 }
 </style>

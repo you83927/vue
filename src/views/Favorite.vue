@@ -16,21 +16,32 @@
 <div class="tab-content" id="myTabContent">
   <!-- 文章 -->
   <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-       <div v-if="activeTab === 'article'">
-          <!-- 在这里放置展示文章数据的代码 -->
-          <ul >
-            <li v-for="article in articles" :key="article[1].id" style="list-style-type: none;">
-              
-              <div class="accordion m-3" :id="article[1].id">
-  <div class="accordion-item" >
-
+    <div class="demo-input-size">
+      <el-input
+      v-model="Rinput"
+      class="w-50 m-2"
+      size="large"
+      placeholder="Please Input"
+      :prefix-icon="Search"
+      @input="searchRestaurant(activeTab)"
+      /> 
+    </div>
+    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(activeTab)">
+      <div v-if="activeTab === 'article'">
+        <!-- 在这里放置展示文章数据的代码 -->
+        <ul >
+          <li v-for="article in articles" :key="article[1].id" style="list-style-type: none;">
+            
+            <div class="accordion m-3" :id="article[1].id">
+              <div class="accordion-item" >
+                
     <el-card class="box-card" :id="'heading-' + article[1].id" >
-    
-          <div class="" >
-            <el-button type="info" plain  @click="deleteFavoriteArticle(article[1].id)" style="float: right;" :icon="Delete"/>
-          </div>
-
-
+      
+      <div class="" >
+        <el-button type="info" plain  @click="deleteFavoriteArticle(article[1].id)" style="float: right;" :icon="Delete"/>
+      </div>
+      
+      
       <div class="card-header"  style="display: flex;">
         
         <div style="flex: 1;">
@@ -45,15 +56,15 @@
             </a>
           </div>
         </div>
-
-
+        
+        
         <div style="flex ;" class="m-3">
           <div   style="font-size:x-large">
             <a  @click="goToOrderUser(article[0].id)">
               {{article[0].username}}
             </a>
           </div>
-  
+          
           <div   style="font-size:smaller">
             {{article[0].nickname}}
           </div>
@@ -65,13 +76,13 @@
             </a>
           </div>
         </div>
-
+        
         <div style="flex ;">
           <div class="m-3" >
             {{ article[1].createdDate }}
           </div>
         </div>
- 
+        
         
       </div>
       <div class="accordion-body" style="font-size:larger;">
@@ -81,45 +92,46 @@
     </el-card>
     
   </div>
+</div>
+
+</li>
+</ul>
+<!-- <h2 class="accordion-header" :id="'heading-' + article.id">
+  <div class="d-flex align-items-center justify-content-between">
+    <a href=""> {{ article.title }}</a>
+    <button :id="'accordion-button-' + article.id" class="accordion-button collapsed scaled-button"  type="button" :data-bs-toggle="'collapse'"
+    :data-bs-target="'#collapse-' + article.id"
+    :aria-expanded="false"
+    :aria-controls="'collapse-' + article.id"
+    >
+  </button>
+</div>
+</h2> -->
+<!-- <div :id="'collapse-' + article.id" class="accordion-collapse collapse" :aria-labelledby="'heading-' + article.id">
+  <div class="accordion-body">
+    {{ article.context}}
   </div>
-  
-            </li>
-          </ul>
-    <!-- <h2 class="accordion-header" :id="'heading-' + article.id">
-      <div class="d-flex align-items-center justify-content-between">
-       <a href=""> {{ article.title }}</a>
-        <button :id="'accordion-button-' + article.id" class="accordion-button collapsed scaled-button"  type="button" :data-bs-toggle="'collapse'"
-        :data-bs-target="'#collapse-' + article.id"
-        :aria-expanded="false"
-        :aria-controls="'collapse-' + article.id"
-        >
-      </button>
-    </div>
-    </h2> -->
-    <!-- <div :id="'collapse-' + article.id" class="accordion-collapse collapse" :aria-labelledby="'heading-' + article.id">
-      <div class="accordion-body">
-        {{ article.context}}
-      </div>
-    </div> -->
-      
-        </div>
-  </div>
+</div> -->
+
+</div>
+</div>
+</div>
 <!-- ----------------------------------------------------------------------------------------------------------------- -->
 
 
-  <!-- 餐廳 -->
-  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-    <div class="demo-input-size">
-  <el-input
+<!-- 餐廳 -->
+<div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+  <div class="demo-input-size">
+    <el-input
     v-model="Rinput"
     class="w-50 m-2"
     size="large"
     placeholder="Please Input"
     :prefix-icon="Search"
-    @input="searchRestaurant"
+    @input="searchRestaurant(activeTab)"
   /> 
 </div>
-    <div class="scrollable-container" ref="dataList" @scroll="handleScroll">
+  <div class="scrollable-container" ref="RdataList" @scroll="handleScroll(activeTab)">
     <div v-if="activeTab === 'restaurant'">
       <!-- 在这里放置展示餐厅数据的代码 -->
       <ul>
@@ -286,6 +298,17 @@
 
   <!-- 食物 -->
   <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+    <div class="demo-input-size">
+    <el-input
+    v-model="Rinput"
+    class="w-50 m-2"
+    size="large"
+    placeholder="Please Input"
+    :prefix-icon="Search"
+    @input="searchRestaurant(activeTab)"
+  /> 
+</div>
+    <div class="scrollable-container" ref="FdataList" @scroll="handleScroll(activeTab)">
        <div v-if="activeTab === 'food'">
         
         <!-- 在这里放置展示食物数据的代码 -->
@@ -295,7 +318,6 @@
       v-for="food in foods"
       :key="food.id"
       :span="5"
-      :offset="index > 0 ? 2 : 0"
       class="m-3"
     >
       <el-card  :body-style="{ padding: '10px' }" >
@@ -310,7 +332,7 @@
             <span>{{ food.foodType }}</span>
           </a>
           <div class="bottom">
-            <time class="time">{{ currentDate }}</time>
+            <!-- <time class="time">{{ currentDate }}</time> -->
             <!-- <el-button text class="button">Operating</el-button> -->
           </div>
         </div>
@@ -318,6 +340,7 @@
     </el-col>
   </el-row>
           </ul>
+        </div>
         </div>
   </div>
   <!-- ------------------------------------------------------------------------------------ -->
@@ -353,12 +376,19 @@ const food = ref('');
 // location.reload()
 let searchTimeout = null;
 const Rinput = ref('')
-const dataList = ref(null);
+const AdataList = ref(null);
+const RdataList = ref(null);
+const FdataList = ref(null);
 const isLoading = ref(true);
-const items = ref([]);
 
-onMounted(async () => {
-  await fetchData(activeTab.value);
+const articlesitems = ref([]);
+const restaurantsitems = ref([]);
+const foodsitems = ref([]);
+
+onMounted( () => {
+  fetchData('restaurant');
+       fetchData('food');
+       fetchData('article');
 });
 
 // 在组件加载时获取文章数据
@@ -366,15 +396,16 @@ const fetchData = async (tab) => {
   const a = sessionStorage.getItem('userId')
   try {
        let response;
-       console.log(activeTab.value);
+      //  console.log(activeTab.value);
     if (tab === 'article') {
-      fetchData('restaurant');
-       fetchData('food');
-      response = await axiosGet('http://localhost:8080/user/favorite/articles',{withCredentials:true});
+
+      response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true ,params:{userId:a,title:'',page:0,size:4}});
       console.log(response);   
-      articles.value = response;
+      isLoading.value = false;
+      articles.value = response.content;
+      articlesitems.value = response.pageable
       articles.value.forEach((article)=>{
-        console.log(article[0].userName);
+        console.log(article[0].username);
       articleUser.value = article[0]
       // console.log(decodeURIComponent(atob(article[1].photo)));
       if(article[0].photo==null){
@@ -390,37 +421,48 @@ const fetchData = async (tab) => {
     
 
     } else if (tab === 'restaurant') {
+
       // response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
       const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:'',page:0,size:3}})
       console.log(response);
       isLoading.value = false;
       restaurants.value = response.content;
-      items.value = response.pageable
+      restaurantsitems.value = response.pageable
     } else if (tab === 'food') {
-      response = await axiosGet('http://localhost:8080/user/favorite/foods',{withCredentials:true});
+      const response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype',{withCredentials:true,params:{userId:a,foodType:'',page:0,size:10}});
       console.log(response);
-      foods.value = response;
+      isLoading.value = false;
+      foods.value = response.content;
+      foodsitems.value = response.pageable
     }
   } catch (error) {
     console.error('An error occurred:', error);
   }
   
 };
-
-const findOtherUsersById =async(userId)=>{
-  response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true});
-  
-  console.log(response);  
-}
-
 // 切换选项卡时更新数据
 function changeTab(tab) {
-  activeTab.value=tab;
-    // 清空搜索栏的内容
-    if (tab != 'restaurant') {
-    Rinput.value = ''; // 清空餐厅搜索栏内容
-    fetchData(tab);
+  activeTab.value = tab;
+  
+  // 清空搜索栏的内容
+  Rinput.value = '';
+
+  // 切换到不同的选项卡时，重新获取数据
+  if (tab === 'article') {
+    fetchData('article');
+  } else if (tab === 'restaurant') {
+    fetchData('restaurant');
+  } else if (tab === 'food') {
+    fetchData('food');
   }
+
+  // 将滚动位置重置到顶部
+  nextTick(() => {
+    const list = tab === 'article' ? AdataList.value : (tab === 'restaurant' ? RdataList.value : FdataList.value);
+    if (list) {
+      list.scrollTop = 0;
+    }
+  });
 }
 
 const goToOrderUser = async(userId)=>{
@@ -491,65 +533,143 @@ const deleteFavoriteFoodType = async(fId)=>{
   }
 }
 
-const searchRestaurant = async()=>{ 
+const searchRestaurant = async(tab)=>{ 
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
       // 清空已加载的数据和页码
-      restaurants.value = [];
-  items.value = { pageNumber: 0 };
+      if (tab === 'restaurant') {
+    restaurants.value = [];
+    restaurantsitems.value = { pageNumber: 0 };
+  } else if (tab === 'article') {
+    articles.value = [];
+    articlesitems.value = { pageNumber: 0 };
+  } else if (tab === 'food') {
+    foods.value = [];
+    foodsitems.value = { pageNumber: 0 };
+  }
   
 
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
- const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page:0,size:3}})
-console.log(response.content);
-restaurants.value = response.content;
+//  const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page:0,size:3}})
+// console.log(response.content);
+// restaurants.value = response.content;
 
-isLoading.value = false;
-     // 将滚动位置重置到顶部
-     nextTick(() => {
-        const list = dataList.value;
-        if (list) {
-          list.scrollTop = 0;
-        }
-      });
+// isLoading.value = false;
+
+let response;
+    if (tab === 'restaurant') {
+      response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName', { withCredentials: true, params: { userId: a, name: Rinput.value, page: 0, size: 3 } });
+      restaurants.value = response.content;
+      isLoading.value = false;
+    } else if (tab === 'article') {
+      response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle', { withCredentials: true, params: { userId: a, title: Rinput.value, page: 0, size: 3 } });
+      articles.value = response.content;
+      articles.value.forEach((article)=>{
+        console.log(article[0].username);
+      articleUser.value = article[0]
+      // console.log(decodeURIComponent(atob(article[1].photo)));
+      if(article[0].photo==null){
+        article[0].photo ="/img/noImage.jpg"
+        
+      }
+      // else{
+      //   // article[1].photo ="/img/noImage.jpg"
+      //   article[0].photo = atob(article[0].photo)
+      // }
+    })
+      isLoading.value = false;
+    } else if (tab === 'food') {
+      response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype', { withCredentials: true, params: { userId: a, foodType: Rinput.value, page: 0, size: 10 } });
+      foods.value = response.content;
+      isLoading.value = false;
+    }
+    // 将滚动位置重置到顶部
+    nextTick(() => {
+      const list = tab === 'article' ? AdataList.value : (tab === 'restaurant' ? RdataList.value : FdataList.value);
+      if (list) {
+        list.scrollTop = 0;
+      }
+    });
 
       
   }, 1000); // 延遲一秒後執行查詢
 }
 
-const handleScroll =async () => {
-  const list = dataList.value;
+const handleScroll =async (tab) => {
   const a = sessionStorage.getItem('userId')
+  
+  if(tab=="restaurant"){
+  const list = RdataList.value;
   if (list) {
     // console.log(list);
     const threshold = 10;
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
-    console.log(isAtBottom);
-    console.log(isLoading.value);
+    // console.log(isAtBottom);
+    // console.log(isLoading.value);
     if (isAtBottom && !isLoading.value) {
+      isLoading.value = true; 
       try {
+        console.log(tab);
+          const pageToLoad = restaurantsitems.value.pageNumber++
+          console.log(pageToLoad);
+          const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page: pageToLoad+1,size:3}})
+          console.log(response);
+          restaurants.value = [...restaurants.value,...response.content];  
+          console.log(restaurants.value);
+          // restaurants.value = [];
+          // restaurantsitems.value = { pageNumber: 0 };
+          
+          
+          
+        } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+}
+}
+}
+if(tab=="article"){
+  console.log(tab);
+  const list = AdataList.value;
+if (list) {
+  // console.log(list);
+  const threshold = 10;
+  const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+  // console.log(isAtBottom);
+  // console.log(isLoading.value);
+  if (isAtBottom && !isLoading.value) {
+    isLoading.value = true; 
+    try {
+        console.log(tab);
+          const pageToLoad = articlesitems.value.pageNumber++
+          console.log(pageToLoad);
+          const response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true, params:{userId:a,title:Rinput.value,page: pageToLoad+1,size:3}})
+          console.log(response);
+          // articles.value = response.content;
+          articles.value = [...articles.value,...response.content];  
+          articles.value.forEach((article)=>{
+        console.log(article[0].username);
+      articleUser.value = article[0]
+      // console.log(decodeURIComponent(atob(article[1].photo)));
+      if(article[0].photo==null){
+        article[0].photo ="/img/noImage.jpg"
         
-        const pageToLoad = items.value.pageNumber++
-        console.log(pageToLoad);
-    // const response = await axiosGet('http://localhost:8080/user/findOtherUsersByUsername',{params: {userName: Rinput.value,page: pageToLoad+1, size: 3 }},{withCredentials:true});
-    const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page: pageToLoad+1,size:3}})
-    console.log(response);
+      }
+      // else{
+      //   // article[1].photo ="/img/noImage.jpg"
+      //   article[0].photo = atob(article[0].photo)
+      // }
+    })
+          console.log(articles.value);
+          // articles.value = [];
+          // articlesitems.value = { pageNumber: 0 };
 
-    // response.content.forEach((follower)=>{
-    //   if(follower.photo==null){
-    //     follower.photo ="/img/noImage.jpg"
-        
-    //   }else{
-    //     follower.photo = atob(follower.photo)
-    //   }
-    //   // isRemove.value[follower.id] = true;
-    // })
-  
-    restaurants.value = [...restaurants.value,...response.content];
-    
-    console.log(restaurants.value);
+
+      
+
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
@@ -557,19 +677,48 @@ const handleScroll =async () => {
   }
     }
   }
-};
+}
+
+if(tab=="food"){
+  const list = FdataList.value;
+  if (list) {
+    // console.log(list);
+    const threshold = 10;
+    const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+    // console.log(isAtBottom);
+    // console.log(isLoading.value);
+    if (isAtBottom && !isLoading.value) {
+      isLoading.value = true; 
+      try {
+        console.log(tab);
+        if(tab=="food"){
+          const pageToLoad = foodsitems.value.pageNumber++
+          console.log(pageToLoad);
+          const response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype',{withCredentials:true, params:{userId:a,foodType:Rinput.value,page: pageToLoad+1,size:3}})
+          console.log(response);
+          foods.value = [...foods.value,...response.content];  
+          console.log(foods.value);
+          // foods.value = [];
+          //  foodsitems.value = { pageNumber: 0 };
+
+        }
+
+
+      
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+    }
+  }
+}
+
+};  
 </script>
     
 <style scoped>
-    .scaled-button {
-      transform: scale(0.8); /* 调整缩放值 */
-  display: flex;
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
-  background-color: lightskyblue; /* 为了演示，添加背景颜色 */
-  width: 24px; /* 设置按钮宽度 */
-  height: 24px; /* 设置按钮高度 */
-}
 
 .d-flex div {
   flex-grow: 1;
@@ -614,7 +763,7 @@ const handleScroll =async () => {
 }
 
 .scrollable-container {
-  max-height: 400px; /* 設定最大高度，超過會顯示滾動條 */
+  max-height: 600px; /* 設定最大高度，超過會顯示滾動條 */
   overflow-y: auto; /* 添加垂直滾動條 */
 }
 </style>

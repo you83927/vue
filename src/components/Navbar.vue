@@ -1,7 +1,7 @@
 <template>
         <nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/Navbar.vue">EEIT166</a>
+    <a class="navbar-brand" href="http://youtube.com">EEIT166</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -28,7 +28,7 @@
             <li> <router-link class="dropdown-item" to="/userDetial">用戶資料</router-link></li>
             <li> <router-link class="dropdown-item" to="/follower">追蹤中用戶</router-link></li>
             <li><router-link class="dropdown-item" to="/favorite">最愛</router-link></li>
-             <li><router-link class="dropdown-item" to="/searchUsername">搜尋</router-link></li>
+             <li><router-link class="dropdown-item" to="/searchUsername">搜尋所有使用者</router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" @click="logOut">登出</a></li>
           </ul>
