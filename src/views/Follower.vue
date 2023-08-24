@@ -25,7 +25,43 @@
         <div >
           <div style="font-size: large;font-weight:bolder;padding-left: 100px;padding-top: 10px;">
            <a  @click="goToOrderUser(follower.id)"> {{ follower.username}}</a>
+
+           <div class="flex justify-space-between mb-4 flex-wrap gap-4">
+
+<el-dropdown trigger="click">
+<span class="el-dropdown-link">
+  <el-button 
+  v-for="button in buttons"
+  :key="button.text"
+  :type="button.type"
+  link
+  ><i class='bx bx-dots-vertical-rounded bx-sm' ></i></el-button>
+  <el-icon class="el-icon--right"></el-icon>
+</span>
+<template #dropdown>
+  <el-dropdown-menu>
+    <el-dropdown-item class="clearfix">
+      <div v-if="!isRemove[follower.id] || follower.id==user.id" >
+        <div  @click="toggleRemoveMode(follower.id)" >取消追蹤<i class='bx bx-x-circle '></i></div>
+      </div>
+
+      <div v-else>
+        <div >取消追蹤<i class='bx bx-x-circle '></i></div>
+      </div>
+      <!-- <el-button type="danger" :icon="Delete" circle @click="toggleRemoveMode(follower.id)"/> -->
+    </el-dropdown-item>
+    <el-dropdown-item class="clearfix">
+      replies
+      <el-badge class="mark" :value="3" />
+    </el-dropdown-item>
+  </el-dropdown-menu>
+</template>
+</el-dropdown>
+</div>
+
           </div>
+          
+          
           <div style="font-size: smaller;font-weight:lighter;padding-left: 100px;">
             {{ follower.nickname}}
           </div>
@@ -34,45 +70,12 @@
                 <el-button type="info" plain disabled>追蹤中</el-button>
               </div>
               <div v-else>
-                <el-button type="primary" plain @click="addFollower(follower.id)">追踪用戶</el-button>
+                <el-button type="primary" plain @click="addFollower(follower.id)">追蹤用戶</el-button>
                 <!-- <button type="button" class="btn btn-info" @click="addFollower(follower.id)">追踪用戶</button> -->
               </div>
             </div>
-            
-            <!-- <button class="delete btn btn-danger" style="float:right;" @click="toggleRemoveMode(follower.id)">刪除</button> -->
-           
-            <div class="flex justify-space-between mb-4 flex-wrap gap-4">
 
-              <el-dropdown trigger="click">
-              <span class="el-dropdown-link">
-                <el-button 
-                v-for="button in buttons"
-                :key="button.text"
-                :type="button.type"
-                link
-                ><i class='bx bx-dots-vertical-rounded bx-sm' ></i></el-button>
-                <el-icon class="el-icon--right"></el-icon>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item class="clearfix">
-                    <div v-if="!isRemove[follower.id] || follower.id==user.id" >
-                      <div  @click="toggleRemoveMode(follower.id)" >取消追蹤<i class='bx bx-x-circle '></i></div>
-                    </div>
-
-                    <div v-else>
-                      <div >取消追蹤<i class='bx bx-x-circle '></i></div>
-                    </div>
-                    <!-- <el-button type="danger" :icon="Delete" circle @click="toggleRemoveMode(follower.id)"/> -->
-                  </el-dropdown-item>
-                  <el-dropdown-item class="clearfix">
-                    replies
-                    <el-badge class="mark" :value="3" />
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-            </div>
+  
 
           </div>
         </div>
@@ -127,7 +130,7 @@ const addFollowingUser = ref({
 
 
 const fetchUserData = async () => {
-    const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:0,size:5}});
+    const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:0,size:6}});
     console.log(response);
     followers.value = response.content;
     items.value = response.pageable
@@ -156,7 +159,7 @@ const handleScroll =async () => {
       try {
         const pageToLoad = items.value.pageNumber++
         console.log(pageToLoad);
-        const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:pageToLoad+1,size:5}});
+        const response = await axiosGet('http://localhost:8080/user/follow',{withCredentials:true,params:{page:pageToLoad+1,size:6}});
     
     console.log(response.content);
 
@@ -210,7 +213,7 @@ const searchUsername = async()=>{
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
     console.log(a);
- const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value,id:a,page:0,size:5}})
+ const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value,id:a,page:0,size:6}})
 console.log(response);
 
  followers.value = response;

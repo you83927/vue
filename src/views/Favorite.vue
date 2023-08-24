@@ -574,10 +574,10 @@ let response;
         article[0].photo ="/img/noImage.jpg"
         
       }
-      // else{
-      //   // article[1].photo ="/img/noImage.jpg"
-      //   article[0].photo = atob(article[0].photo)
-      // }
+      else{
+        // article[1].photo ="/img/noImage.jpg"
+        article[0].photo = atob(article[0].photo)
+      }
     })
       isLoading.value = false;
     } else if (tab === 'food') {
@@ -649,20 +649,31 @@ if (list) {
           const response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true, params:{userId:a,title:Rinput.value,page: pageToLoad+1,size:3}})
           console.log(response);
           // articles.value = response.content;
-          articles.value = [...articles.value,...response.content];  
-          articles.value.forEach((article)=>{
-        console.log(article[0].username);
-      articleUser.value = article[0]
-      // console.log(decodeURIComponent(atob(article[1].photo)));
-      if(article[0].photo==null){
-        article[0].photo ="/img/noImage.jpg"
-        
-      }
-      // else{
-      //   // article[1].photo ="/img/noImage.jpg"
-      //   article[0].photo = atob(article[0].photo)
-      // }
-    })
+          // articles.value.forEach((article)=>{
+          //   console.log(article[0].username);
+          //   articleUser.value = article[0]
+          //   // console.log(decodeURIComponent(atob(article[1].photo)));
+          //   if(article[0].photo==null){
+          //     article[0].photo ="/img/noImage.jpg"
+              
+          //   }
+          //   else{
+          //     // article[1].photo ="/img/noImage.jpg"
+          //     article[0].photo = atob(article[0].photo)
+          //   }
+          // })
+
+          const newArticles = response.content.map(article => {
+      articleUser.value = article[1]
+          if (article[0].photo == null) {
+            article[0].photo = "/img/noImage.jpg";
+          } else {
+            article[0].photo = atob(article[0].photo);
+          }
+          return article;
+        });
+
+          articles.value = [...articles.value,...newArticles];  
           console.log(articles.value);
           // articles.value = [];
           // articlesitems.value = { pageNumber: 0 };

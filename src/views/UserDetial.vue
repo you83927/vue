@@ -25,7 +25,7 @@
               <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
             </el-sub-menu>
           </el-sub-menu> -->
-          <el-menu-item @click="showMain('article')">文章</el-menu-item>
+          <el-menu-item @click="showMain('article')">我的文章</el-menu-item>
           <!-- <el-sub-menu index="2">
             <template #title>
               <el-icon><icon-menu /></el-icon>Navigator Two
@@ -91,6 +91,7 @@
 </div>
 <el-button type="info" plain class="btn btn-info m-3"  @click="showModify">編輯基本資料</el-button>
 <el-button type="warning" plain class="btn btn-info" @click="showPrivacySetting">更改密碼</el-button>
+
 </div>
 
 <div v-else-if="aaa=='article'">
@@ -103,10 +104,16 @@
       size="large"
       placeholder="Please Input"
       :prefix-icon="Search"
-      @input="searchRestaurant(activeTab)"
+      @input="searchRestaurant(bbb)"
       /> 
+      <el-button type="primary" @click="changeType(0)">食譜</el-button>
+    <el-button type="success" @click="changeType(1)">食記</el-button>
+    <el-button style="float: right;" class="m-3"><i class='bx bx-edit'></i></el-button>
+
     </div>
-    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(activeTab)">
+
+    <div v-if="bbb==1">
+    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(bbb)">
         <ul >
           <li v-for="article in articles" :key="article[0].id" style="list-style-type: none;">
             
@@ -184,6 +191,86 @@
 </div>
 
 
+    <div v-else-if="bbb==0">
+    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(bbb)">
+        <ul >
+          <li v-for="article in articles" :key="article[0].id" style="list-style-type: none;">
+            
+            <div class="accordion m-3" :id="article[0].id">
+              <div class="accordion-item" >
+                
+    <el-card class="box-card" :id="'heading-' + article[0].id" >
+      
+      <div class="" >
+        <el-button type="info" plain  @click="deleteFavoriteArticle(article[0].id)" style="float: right;" :icon="Delete"/>
+      </div>
+      
+      
+      <div class="card-header"  style="display: flex;">
+        
+        <div style="flex: 1;">
+          <div class="d-flex align-items-center justify-content-between m-3">
+            <a href="" style="font-size:xx-large"> 
+              {{ article[0].title.length > 20? article[0].title.substring(0, 20) + `...` : article[0].title }}
+     
+            </a>
+          </div>
+        </div>
+        <div style="flex ;" >
+          <div  class="user-photo-container2">
+            <a @click="goToOrderUser(article[1].id)">
+              <img :src="article[1].photo" alt="" class="user-photo mx-auto d-block">
+            </a>
+          </div>
+        </div>
+        
+        
+        <div style="flex ;" class="m-3">
+          <div   style="font-size:x-large">
+            <a  @click="goToOrderUser(article[1].id)">
+              {{article[1].username}}
+            </a>
+          </div>
+          
+          <div   style="font-size:smaller">
+            {{article[1].nickname}}
+          </div>
+        </div>
+        <div style="flex ;">
+          <div class="m-3" >
+            <a >
+              {{ article[0].type ==1 ?"#食記":"#食譜"}}
+            </a>
+          </div>
+        </div>
+        
+        <div style="flex ;">
+          <div class="m-3" >
+            {{ article[0].createdDate }}
+          </div>
+        </div>
+        
+        
+      </div>
+      <div class="accordion-body" style="font-size:larger;">
+        {{ article[0].context.length > 20? article[0].context.substring(0, 20) + `...` : article[0].context }}
+      </div>
+      
+    </el-card>
+    
+  </div>
+</div>
+
+</li>
+</ul>
+
+
+
+</div>
+</div>
+</div>
+
+
 
 </div>
 
@@ -210,7 +297,9 @@
     const URL = import.meta.env.VITE_API_JAVAURL
     
     const aaa = ref('detial')
-    
+    const bbb = ref(1)
+    const x = ref('')
+
     const router = useRouter();
     
     const user = ref({});
@@ -222,6 +311,7 @@
     const AdataList = ref(null);
     const articlesitems = ref([]);
     const isLoading = ref(true);
+    let searchTimeout = null;
 
     
     const fetchUserData = async () => {
@@ -236,8 +326,35 @@
         photo.value = decodeURIComponent(atob(user.value.photo))
         console.log(photo.value);
       }
+      changeType(1)
 
-      const  response1 = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:'',page:0,size:4}});
+    //   const  response1 = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:'',type:1,page:0,size:4}});
+    //   console.log(response1);   
+    //   isLoading.value = false;
+    //   articles.value = response1.content;
+    //   articlesitems.value = response1.pageable
+    //   articles.value.forEach((article)=>{
+    //     console.log(article[1].username);
+    //   articleUser.value = article[1]
+    //   // console.log(decodeURIComponent(atob(article[1].photo)));
+    //   if(article[1].photo==null){
+    //     article[1].photo ="/img/noImage.jpg"
+        
+    //   }else{
+    //     // article[1].photo ="/img/noImage.jpg"
+    //     article[1].photo = atob(article[1].photo)
+    //   }
+    // })
+};
+fetchUserData()
+
+const showMain = (index)=>{
+  aaa.value = index
+}
+
+const changeType = async (type)=>{
+  const a = sessionStorage.getItem('userId')
+  const  response1 = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:'',type:type,page:0,size:4}});
       console.log(response1);   
       isLoading.value = false;
       articles.value = response1.content;
@@ -254,12 +371,147 @@
         article[1].photo = atob(article[1].photo)
       }
     })
-};
-fetchUserData()
-
-const showMain = (index)=>{
-  aaa.value = index
+  bbb.value = type
 }
+
+const deleteFavoriteArticle = async(aId)=>{
+  if(aId!=null){
+    const confirmed = window.confirm("确定要删除吗？");
+    if (confirmed){
+
+      const a = sessionStorage.getItem('userId')
+      console.log(a);
+      console.log(aId);
+      const response = await axiosDelete('http://localhost:8080/user/delete/article',{withCredentials:true,params:{userId:a,articleId:aId}})
+       window.setTimeout(function () {
+             window.location.reload();
+      },1000)
+    }  
+  }
+}
+
+const searchRestaurant = async(type)=>{ 
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+      // 清空已加载的数据和页码
+  //     if (tab === 'restaurant') {
+  //   restaurants.value = [];
+  //   restaurantsitems.value = { pageNumber: 0 };
+  // } else if (tab === 'article') {
+  //   articles.value = [];
+  //   articlesitems.value = { pageNumber: 0 };
+  // } else if (tab === 'food') {
+  //   foods.value = [];
+  //   foodsitems.value = { pageNumber: 0 };
+  // }
+  
+
+  searchTimeout = setTimeout(async () => {
+    const a = sessionStorage.getItem('userId')
+    const  response = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:Rinput.value,type:type,page:0,size:4}});
+    //  const  response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle', { withCredentials: true, params: { userId: a, title: Rinput.value, page: 0, size: 3 } });
+     console.log(response.content);
+      articles.value = response.content;
+      articles.value.forEach((article)=>{
+        console.log(article[1].username);
+      articleUser.value = article[1]
+      // console.log(decodeURIComponent(atob(article[1].photo)));
+      if(article[1].photo==null){
+        article[1].photo ="/img/noImage.jpg"
+        
+      }
+      else{
+        // article[1].photo ="/img/noImage.jpg"
+        article[1].photo = atob(article[1].photo)
+      }
+    })
+      isLoading.value = false;
+    
+    // 将滚动位置重置到顶部
+    // nextTick(() => {
+    //   const list = tab === 'article' ? AdataList.value : (tab === 'restaurant' ? RdataList.value : FdataList.value);
+    //   if (list) {
+    //     list.scrollTop = 0;
+    //   }
+    // });
+
+      
+  }, 1000); // 延遲一秒後執行查詢
+}
+
+const handleScroll =async (type) => {
+  const a = sessionStorage.getItem('userId')
+  console.log(type);
+  x.value = !type?(type==0?type:1):(type==0?type:1)
+  console.log(x.value);
+  const list = AdataList.value;
+if (list) {
+  // console.log(list);
+  const threshold = 10;
+  const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+  // console.log(isAtBottom);
+  // console.log(isLoading.value);
+  if (isAtBottom && !isLoading.value) {
+    isLoading.value = true; 
+    try {
+          const pageToLoad = articlesitems.value.pageNumber++
+          // console.log(pageToLoad);
+          // console.log(a);
+          // console.log(Rinput.value);
+          console.log(x.value);
+          const response = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:Rinput.value,type:x.value,page:pageToLoad+1,size:4}});
+          // const response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true, params:{userId:a,title:Rinput.value,page: pageToLoad+1,size:3}})
+          console.log(response);
+          // articles.value = response.content;
+       
+          
+    //       articles.value.forEach((article)=>{
+    //         console.log(article);
+    //     console.log(article[1].username);
+    //   articleUser.value = article[1]
+    //   // console.log(decodeURIComponent(atob(article[1].photo)));
+    //   // console.log(article[1].photo);
+    //   if(article[1].photo==null){
+    //     article[1].photo ="/img/noImage.jpg"
+        
+    //   }
+    //   else{
+    //     // article[1].photo ="/img/noImage.jpg"
+    //     // article[1].photo = atob(article[1].photo)
+    //   }
+    // })
+
+    const newArticles = response.content.map(article => {
+      articleUser.value = article[1]
+          if (article[1].photo == null) {
+            article[1].photo = "/img/noImage.jpg";
+          } else {
+            article[1].photo = atob(article[1].photo);
+          }
+          return article;
+        });
+        console.log(newArticles);
+     articles.value = [...articles.value,...newArticles]; 
+          console.log(articles.value);
+          // articles.value = [];
+          // articlesitems.value = { pageNumber: 0 };
+
+
+      
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+    }
+  }
+
+
+
+
+};  
 
 
 const genderString = computed(() => {
