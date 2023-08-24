@@ -51,8 +51,6 @@ library.add(faPizzaSlice)
 
 import HelloVue from "./components/HelloVue.vue";
 import Favorite from "./views/Favorite.vue";
-import About from "./views/About.vue"
-import Contact from "./views/Contact.vue"
 import Products from "./views/Products.vue"
 import Login from "./views/Login.vue"
 import UserDetial from "./views/UserDetial.vue"
@@ -77,16 +75,6 @@ const routers=[
         path:'/',
         name:'Login',
         component:Login
-    },
-    {
-        path:'/about',
-        name:'About',
-        component:About
-    },
-    {
-        path:'/contact',
-        name:'Contact',
-        component:Contact
     },
     {
         path:'/products',

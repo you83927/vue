@@ -80,7 +80,7 @@ const login = async  () => {
   if (response === 'login success') {
     // localStorage.setItem('user', JSON.stringify(user))
     console.log(response);
-    router.push({ path: '/favorite' });
+    router.push({ path: '/userDetial' });
     
     // return response
     

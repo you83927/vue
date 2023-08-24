@@ -139,13 +139,13 @@
       size="large"
       placeholder="Please Input"
       :prefix-icon="Search"
-      @input="searchRestaurant(activeTab)"
+      @input="searchRestaurant(bbb)"
       /> 
-       <el-button type="primary" @click="changeType(2)">食譜</el-button>
+       <el-button type="primary" @click="changeType(0)">食譜</el-button>
     <el-button type="success" @click="changeType(1)">食記</el-button>
     </div>
         <div v-if="bbb===1">
-    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(activeTab)">
+    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(bbb)">
         <ul >
           <li v-for="article in articles" :key="article[0].id" style="list-style-type: none;">
             
@@ -222,8 +222,8 @@
 </div>
 </div>
 
-        <div v-if="bbb===2">
-    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(activeTab)">
+        <div v-if="bbb===0">
+    <div class="scrollable-container" ref="AdataList" @scroll="handleScroll(bbb)">
         <ul >
           <li v-for="article in articles" :key="article[0].id" style="list-style-type: none;">
             
@@ -330,6 +330,7 @@
     const isFav = ref({});
 
       const bbb = ref(1)
+    const x = ref('')
 
     const photo = ref("")
     
@@ -408,6 +409,76 @@ const showMain = (index)=>{
       changeType(1)
     };
     fetchUserData()
+
+    const handleScroll =async (type) => {
+  const a = sessionStorage.getItem('userId')
+  console.log(type);
+  x.value = !type?(type==0?type:1):(type==0?type:1)
+  console.log(x.value);
+  const list = AdataList.value;
+if (list) {
+  // console.log(list);
+  const threshold = 10;
+  const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
+  // console.log(isAtBottom);
+  // console.log(isLoading.value);
+  if (isAtBottom && !isLoading.value) {
+    isLoading.value = true; 
+    try {
+          const pageToLoad = articlesitems.value.pageNumber++
+          // console.log(pageToLoad);
+          // console.log(a);
+          // console.log(Rinput.value);
+          console.log(x.value);
+          const response = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:userId,title:Rinput.value,type:x.value,page:pageToLoad+1,size:4}});
+          // const response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true, params:{userId:a,title:Rinput.value,page: pageToLoad+1,size:3}})
+          console.log(response);
+          // articles.value = response.content;
+       
+          
+    //       articles.value.forEach((article)=>{
+    //         console.log(article);
+    //     console.log(article[1].username);
+    //   articleUser.value = article[1]
+    //   // console.log(decodeURIComponent(atob(article[1].photo)));
+    //   // console.log(article[1].photo);
+    //   if(article[1].photo==null){
+    //     article[1].photo ="/img/noImage.jpg"
+        
+    //   }
+    //   else{
+    //     // article[1].photo ="/img/noImage.jpg"
+    //     // article[1].photo = atob(article[1].photo)
+    //   }
+    // })
+
+    const newArticles = response.content.map(article => {
+      articleUser.value = article[1]
+          if (article[1].photo == null) {
+            article[1].photo = "/img/noImage.jpg";
+          } else {
+            article[1].photo = atob(article[1].photo);
+          }
+          return article;
+        });
+        console.log(newArticles);
+     articles.value = [...articles.value,...newArticles]; 
+          console.log(articles.value);
+          // articles.value = [];
+          // articlesitems.value = { pageNumber: 0 };
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
+  }
+    }
+  }
+
+
+};  
+
+
 
     const changeType = async (type)=>{
   const a = sessionStorage.getItem('userId')

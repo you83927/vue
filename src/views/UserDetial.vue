@@ -394,13 +394,13 @@ const searchRestaurant = async(type)=>{
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
-      // 清空已加载的数据和页码
+  //     清空已加载的数据和页码
   //     if (tab === 'restaurant') {
   //   restaurants.value = [];
   //   restaurantsitems.value = { pageNumber: 0 };
   // } else if (tab === 'article') {
-  //   articles.value = [];
-  //   articlesitems.value = { pageNumber: 0 };
+    articles.value = [];
+    articlesitems.value = { pageNumber: 0 };
   // } else if (tab === 'food') {
   //   foods.value = [];
   //   foodsitems.value = { pageNumber: 0 };
@@ -593,6 +593,14 @@ const showModify = ()=>{
 
 const showPrivacySetting = ()=>{
   router.push({name:"PrivacySetting"})
+}
+
+const goToOrderUser = async(userId)=>{
+
+const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
+
+console.log(response);
+showMain("detial")
 }
 
 </script>

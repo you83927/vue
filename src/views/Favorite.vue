@@ -429,7 +429,7 @@ const fetchData = async (tab) => {
       restaurants.value = response.content;
       restaurantsitems.value = response.pageable
     } else if (tab === 'food') {
-      const response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype',{withCredentials:true,params:{userId:a,foodType:'',page:0,size:10}});
+      const response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype',{withCredentials:true,params:{userId:a,foodType:'',page:0,size:8}});
       console.log(response);
       isLoading.value = false;
       foods.value = response.content;
@@ -581,7 +581,7 @@ let response;
     })
       isLoading.value = false;
     } else if (tab === 'food') {
-      response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype', { withCredentials: true, params: { userId: a, foodType: Rinput.value, page: 0, size: 10 } });
+      response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype', { withCredentials: true, params: { userId: a, foodType: Rinput.value, page: 0, size: 8 } });
       foods.value = response.content;
       isLoading.value = false;
     }
@@ -705,7 +705,7 @@ if(tab=="food"){
         if(tab=="food"){
           const pageToLoad = foodsitems.value.pageNumber++
           console.log(pageToLoad);
-          const response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype',{withCredentials:true, params:{userId:a,foodType:Rinput.value,page: pageToLoad+1,size:3}})
+          const response = await axiosGet('http://localhost:8080/user/favorite/foodsByFoodtype',{withCredentials:true, params:{userId:a,foodType:Rinput.value,page: pageToLoad+1,size:8}})
           console.log(response);
           foods.value = [...foods.value,...response.content];  
           console.log(foods.value);
