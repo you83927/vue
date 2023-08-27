@@ -42,17 +42,27 @@
           </div>
             <input type="file" id="uploadPhoto"  style="display: none" @change="upload">
           </label>
-          <el-button type="danger" plain @click="deletePhoto">刪除頭貼</el-button>
-          <!-- <button type="button" class="btn btn-danger" @click="deletePhoto">刪除頭貼</button> -->
+          
+          <el-popconfirm title="確定刪除嗎?" 
+                        confirm-button-text="Yes"
+                        cancel-button-text="No"
+                        @confirm="deletePhoto"
+                        >
+            <template #reference>
+      <el-button type="danger" plain >刪除頭貼</el-button>
+      <!-- <el-button>Delete</el-button> -->
+    </template>
+  </el-popconfirm>
+
           <div class="row g-3">
              
      
 
             <div class="col-12">
-              <label for="username" class="form-label">Username</label>
+              <label for="username" class="form-label">使用者</label>
               <div class="input-group has-validation">
                 <!-- <span class="input-group-text">@</span> -->
-                <input type="text" class="form-control" id="username" placeholder="Username" v-model="user.userName"  required disabled>
+                <input type="text" class="form-control" id="username" placeholder="Username" v-model="user.username"  required disabled>
               <div class="invalid-feedback">
                   Your username is required.
                 </div>
@@ -60,7 +70,7 @@
             </div>
 
             <div class="col-12">
-              <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
+              <label for="email" class="form-label">信箱 <span class="text-body-secondary">(選填)</span></label>
               <input type="email" class="form-control" id="email" v-model.trim="user.email" placeholder="you@example.com">
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
@@ -68,15 +78,15 @@
             </div>
 
             <div class="col-12">
-              <label for="nickName" class="form-label">Nick Name</label>
-              <input type="text" class="form-control" id="nickName" v-model.trim="user.nickName" placeholder="" required>
+              <label for="nickName" class="form-label">暱稱</label>
+              <input type="text" class="form-control" id="nickName" v-model.trim="user.nickname" placeholder="" required>
               <div class="invalid-feedback">
                 Please enter your shipping address.
               </div>
             </div>
 
             <div class="col-12">
-              <label for="birthday" class="form-label">Birthday<span class="text-body-secondary">(Optional)</span></label>
+              <label for="birthday" class="form-label">生日<span class="text-body-secondary">(選填)</span></label>
               <input type="date" class="form-control" id="birthday" placeholder="Apartment or suite"  v-model="user.birthday">
             
                <!-- <el-date-picker v-model="user.birthday" id="birthday" type="date" placeholder="Pick a date"  /> -->
@@ -84,17 +94,17 @@
             </div>
 
             <div class="col-12">
-          <label for="gender" class="form-label">Gender <span class="text-body-secondary">(Optional)</span></label>
+          <label for="gender" class="form-label">性別 <span class="text-body-secondary">(選填)</span></label>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" name="gender" id="genderMale" value="male"  :checked="user.gender === 1 " @change="handleGenderChange(1)">
             <label class="form-check-label" for="genderMale">
-              Male
+              男
             </label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" name="gender" id="genderFemale" value="female" :checked="user.gender === 2 " @change="handleGenderChange(2)">
             <label class="form-check-label" for="genderFemale">
-              Female
+              女
             </label>
           </div>
         </div>
@@ -146,7 +156,7 @@
     import { ref ,computed} from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
-    import {axiosPost,axiosGet,axiosPut} from '../global'
+    import {axiosPost,axiosGet,axiosPut,swalError} from '../global'
     
     const user = ref({
       gender: 0
@@ -233,7 +243,10 @@ if(photo.value ==null || photo.value == "/img/noImage.jpg"){
 const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
 
 if(response=="更新成功"){
-  router.push({path:"/userDetial"})
+  window.setTimeout(function () {
+             window.location.reload();
+            },1000)
+            router.push({path:"/userDetial"})
   
 }
   // return error
@@ -259,10 +272,16 @@ const upload = async (e) => {
 
     
     reader.onload = (e)=>{
-      photo.value = e.target.result
-      photoUrl.value  = e.target.result
-      user.value.photo = e.target.result
+      const mime = e.target.result.split(',')[0].split(':')[1].split(';')[0]; // 获取MIME类型
+        if(mime.startsWith('image/')){
 
+          photo.value = e.target.result
+          photoUrl.value  = e.target.result
+          user.value.photo = e.target.result
+          console.log( photo.value);
+        }else{
+          swalError('上傳格式錯誤,只能上傳圖片')
+        }
     }
  
 };

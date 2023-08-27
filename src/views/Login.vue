@@ -79,8 +79,9 @@ const login = async  () => {
   const response = await axiosPost('http://localhost:8080/user/login', user, {withCredentials:true})
   if (response === 'login success') {
     // localStorage.setItem('user', JSON.stringify(user))
+   
     console.log(response);
-    router.push({ path: '/userDetial' });
+    // swalSuccess(response)
     
     // return response
     
@@ -109,6 +110,8 @@ const login = async  () => {
      const a = sessionStorage.getItem('userId')
      const b = sessionStorage.getItem('userUsername')
      const c = sessionStorage.getItem('userNickname')
+
+     router.push({ path: '/userDetial' });
     // .then((res) => {
     //   console.log(res);
     //     console.log(res.data);
@@ -124,6 +127,7 @@ const login = async  () => {
     //     console.log(error.response.data.msg);
     // });
 };
+
 </script>
 
     

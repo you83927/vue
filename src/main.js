@@ -69,7 +69,8 @@ const routers=[
     {
         path:'/favorite',
         name:'Favorite',
-        component:Favorite
+        component:Favorite,
+        meta: { requiresAuth: true }
     },
     {
         path:'/',
@@ -84,17 +85,20 @@ const routers=[
     {
         path:'/userDetial',
         name:'UserDetial',
-        component:UserDetial
+        component:UserDetial,
+        meta: { requiresAuth: true }
     },
     {
         path:'/follower',
         name:'Follower',
-        component:Follower
+        component:Follower,
+        meta: { requiresAuth: true }
     },
     {
         path:'/userModify',
         name:'UserModify',
-        component:UserModify
+        component:UserModify,
+        meta: { requiresAuth: true }
     },
     {
         path:'/rivacySetting',
@@ -108,7 +112,7 @@ const routers=[
     },
     {
         path:'/searchUsername',
-        name:'SearchUsername',
+        name:'SearchUsername',  
         component:SearchUsername
     }
 
@@ -121,6 +125,31 @@ const router = createRouter({
     history:createWebHistory(),
     routes:routers
 })
+
+const isUserLoggedIn=()=>{
+    let a =  sessionStorage.getItem('userId')
+    // console.log(a);
+    if(a!=null){
+        return true
+    }
+    return false
+
+}
+// 設置全局的路由守衛
+router.beforeEach((to, from, next) => {
+    // console.log(isUserLoggedIn());
+    if (to.meta.requiresAuth && isUserLoggedIn()==false) {
+      // 如果路由需要登入，但用戶未登入，將其重定向到登入頁面
+      next({ path: '/' }); // 將 "/login" 換成您的登入頁面路徑
+    } else if (to.meta.requiresGuest && isUserLoggedIn()==true) {
+      // 如果路由需要是訪客（未登入）狀態，但用戶已登入，將其重定向到其他頁面
+      next({ path: '/userDetial' }); // 可以將路徑更換成您想要的頁面路徑
+    } else {
+      next(); // 允許訪問該路由
+    }
+  });
+
+
 export default router
 
 createApp(App)

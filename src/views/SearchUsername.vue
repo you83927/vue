@@ -102,7 +102,7 @@ const disabled = computed(() => loading.value || noMore.value)
 const load = () => {
   loading.value = true
   setTimeout(() => {
-    count.value += 2
+    // count.value += 2
     loading.value = false
   }, 1000)
 }
@@ -131,7 +131,7 @@ onMounted(() => {
 const handleScroll =async () => {
   const list = dataList.value;
   if (list) {
-    const threshold = 0;
+    const threshold = 10;
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
     if (isAtBottom && !isLoading.value) {
 
@@ -178,8 +178,9 @@ const handleScroll =async () => {
  
     const fetchUserData = async () => {
     const response = await axiosPost('http://localhost:8080/user/findAllUser',{},{params: {page:0, size:6 }},{withCredentials:true});
-    // console.log(response);
+    console.log(response.content);
     followers.value = response.content;
+    console.log(response.pageable);
     items.value = response.pageable
     // user.value = response;
     console.log(response.pageable.pageNumber);
@@ -247,10 +248,14 @@ const goToOrderUser = async(userId)=>{
  const userDetial = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
 
 console.log(response.id);
-console.log(userDetial.id);
+console.log(userDetial);
+if(userDetial){
 
-if(response.id==userDetial.id){
-  router.push({path:"/userDetial"})
+  if(response.id==userDetial.id){
+    router.push({path:"/userDetial"})
+  }else{
+    router.push({path:"/otherUsers/"+userId})
+  }
 }else{
   router.push({path:"/otherUsers/"+userId})
 }

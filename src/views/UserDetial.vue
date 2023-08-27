@@ -133,7 +133,6 @@
           <div class="d-flex align-items-center justify-content-between m-3">
             <a href="" style="font-size:xx-large"> 
               {{ article[0].title.length > 20? article[0].title.substring(0, 20) + `...` : article[0].title }}
-     
             </a>
           </div>
         </div>
@@ -316,6 +315,7 @@
     
     const fetchUserData = async () => {
       const a = sessionStorage.getItem('userId')
+      
       console.log(a);
       const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
       user.value =response
@@ -350,10 +350,16 @@ fetchUserData()
 
 const showMain = (index)=>{
   aaa.value = index
+  
+  if(index=="article"){
+    changeType(1)
+  }
 }
 
 const changeType = async (type)=>{
   const a = sessionStorage.getItem('userId')
+  Rinput.value = ''; // 清空搜索字段
+  articles.value = []; // 清空已加载的数据
   const  response1 = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:'',type:type,page:0,size:4}});
       console.log(response1);   
       isLoading.value = false;
@@ -391,21 +397,14 @@ const deleteFavoriteArticle = async(aId)=>{
 }
 
 const searchRestaurant = async(type)=>{ 
-  if (searchTimeout) {
+  console.log(type);
+  if (searchTimeout ) {
     clearTimeout(searchTimeout);
   }
   //     清空已加载的数据和页码
-  //     if (tab === 'restaurant') {
-  //   restaurants.value = [];
-  //   restaurantsitems.value = { pageNumber: 0 };
-  // } else if (tab === 'article') {
     articles.value = [];
     articlesitems.value = { pageNumber: 0 };
-  // } else if (tab === 'food') {
-  //   foods.value = [];
-  //   foodsitems.value = { pageNumber: 0 };
-  // }
-  
+    isLoading.value = true;
 
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
@@ -442,9 +441,9 @@ const searchRestaurant = async(type)=>{
 
 const handleScroll =async (type) => {
   const a = sessionStorage.getItem('userId')
-  console.log(type);
+  // console.log(type);
   x.value = !type?(type==0?type:1):(type==0?type:1)
-  console.log(x.value);
+  // console.log(x.value);
   const list = AdataList.value;
 if (list) {
   // console.log(list);
@@ -496,7 +495,6 @@ if (list) {
           console.log(articles.value);
           // articles.value = [];
           // articlesitems.value = { pageNumber: 0 };
-
 
       
 
@@ -602,6 +600,8 @@ const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/
 console.log(response);
 showMain("detial")
 }
+
+
 
 </script>
     

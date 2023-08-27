@@ -154,7 +154,9 @@
           餐廳
         </div>
       </template>
-      {{ restaurant.name }}
+      <a @click="gotoRestaurant(restaurant.name)">
+        {{ restaurant.name }}
+      </a>
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
@@ -194,7 +196,7 @@
       <div v-else>永久停業</div>
     </el-descriptions-item>
     
-    <el-descriptions-item>
+    <!-- <el-descriptions-item>
       <template #label>
         <div class="cell-item">
           <el-icon >
@@ -211,9 +213,9 @@
     score-template="{value} points"
     size="small"
   />
-    </el-descriptions-item>
+    </el-descriptions-item> -->
 
-<el-descriptions-item>
+<!-- <el-descriptions-item>
       <template #label>
         <div class="cell-item">
           <el-icon >
@@ -230,7 +232,7 @@
     score-template="{value} points"
     size="small"
   />
-    </el-descriptions-item>
+    </el-descriptions-item> -->
 
 
     <el-descriptions-item>
@@ -245,7 +247,7 @@
       <a :href="restaurant.website">{{ restaurant.website }}</a>
       
     </el-descriptions-item>
-    <el-descriptions-item>
+    <!-- <el-descriptions-item>
       <template #label>
         <div class="cell-item">
           <el-icon >
@@ -257,8 +259,8 @@
       <div v-if="restaurant.dineIn==true"><i class='bx bx-check bx-sm'></i></div>
       <div v-else><i class='bx bx-x bx-sm'></i></div>
   
-    </el-descriptions-item>
-    <el-descriptions-item>
+    </el-descriptions-item> -->
+    <!-- <el-descriptions-item>
       <template #label>
         <div class="cell-item">
           <el-icon >
@@ -270,7 +272,7 @@
       <div v-if="restaurant.takeout==true"><i class='bx bx-check bx-sm'></i></div>
       <div v-else><i class='bx bx-x bx-sm'></i></div>
      
-    </el-descriptions-item>
+    </el-descriptions-item> -->
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
@@ -423,7 +425,7 @@ const fetchData = async (tab) => {
     } else if (tab === 'restaurant') {
 
       // response = await axiosGet('http://localhost:8080/user/favorite/restaurants',{withCredentials:true});
-      const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:'',page:0,size:3}})
+      const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:'',page:0,size:5}})
       console.log(response);
       isLoading.value = false;
       restaurants.value = response.content;
@@ -560,7 +562,7 @@ const searchRestaurant = async(tab)=>{
 
 let response;
     if (tab === 'restaurant') {
-      response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName', { withCredentials: true, params: { userId: a, name: Rinput.value, page: 0, size: 3 } });
+      response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName', { withCredentials: true, params: { userId: a, name: Rinput.value, page: 0, size: 5 } });
       restaurants.value = response.content;
       isLoading.value = false;
     } else if (tab === 'article') {
@@ -614,7 +616,7 @@ const handleScroll =async (tab) => {
         console.log(tab);
           const pageToLoad = restaurantsitems.value.pageNumber++
           console.log(pageToLoad);
-          const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page: pageToLoad+1,size:3}})
+          const response = await axiosGet('http://localhost:8080/user/favorite/restaurantsByName',{withCredentials:true, params:{userId:a,name:Rinput.value,page: pageToLoad+1,size:5}})
           console.log(response);
           restaurants.value = [...restaurants.value,...response.content];  
           console.log(restaurants.value);
@@ -725,8 +727,20 @@ if(tab=="food"){
     }
   }
 }
-
 };  
+
+const gotoRestaurant = (restaurantName)=>{
+  router.push({
+      path:"/search-restaurant",
+      query:{
+            page: 1,
+            restaurantName:restaurantName
+      }
+    })
+
+
+}
+
 </script>
     
 <style scoped>

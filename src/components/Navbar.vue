@@ -20,7 +20,7 @@
         <li class="nav-item">
             <router-link class="nav-link" to="/follower">follower</router-link>
         </li> -->
-        <div class="dropdown text-end" >
+        <div class="dropdown text-end" v-if="user">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <img :src="photo" alt="mdo" width="50" class="rounded-circle" >
           </a>
@@ -43,12 +43,13 @@
     import { ref ,computed,onMounted} from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
-    import {axiosPost,axiosGet} from '../global'
+    import {axiosPost,axiosGet,swalError,swalSuccess} from '../global'
 
     const router = useRouter();
 
     const user = ref({});
     const photo = ref("")
+
 
     onMounted (async () => {
       
@@ -58,7 +59,7 @@
     console.log(response);
     // console.log(user.value.photo);
     if(response==null){
-      return null
+      return swalError(response)
     }
       if(user.value.photo==null || user.value.photo==""){
         photo.value ="/img/noImage.jpg"
@@ -72,9 +73,21 @@
     const logOut =async () => {
     const response= await axiosPost('http://localhost:8080/user/logout',{},{withCredentials:true})
       // console.log(response);
+
+      if(response=='logout ok'){
+        sessionStorage.removeItem('userId')
+      sessionStorage.removeItem('userUsername')
+      sessionStorage.removeItem('userNickname')
+        user.value = {};
+    photo.value = "/img/noImage.jpg"; // 或其他預設的圖片
+    // swalSuccess(response)
+      }
       router.push({path:"/"})
     
 }
+
+
+
 </script>
     
 <style>

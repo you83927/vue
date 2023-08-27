@@ -55,6 +55,7 @@
       
     </div>
     <div>
+      <div v-if="isAuth==true">
       <div class="flex justify-space-between mb-4 flex-wrap gap-4">
                <el-dropdown trigger="click">
                  <span class="el-dropdown-link">
@@ -84,16 +85,20 @@
                   </template>
                 </el-dropdown>
               </div>
+            </div>
     </div>
     <div >
-              <div v-if="!isRemove && user.id">
-                <el-button type="info" plain disabled>追蹤中</el-button>
-              </div>
-              <div v-else >
-         
-                 <el-button type="primary" plain @click="addFollower(user.id)">追蹤用戶</el-button>
-              </div>
-           
+          <div v-if="isAuth==true">
+
+            <div v-if="!isRemove && user.id">
+              <el-button type="info" plain disabled>追蹤中</el-button>
+            </div>
+            <div v-else >
+              
+              <el-button type="primary" plain @click="addFollower(user.id)">追蹤用戶</el-button>
+            </div>
+            
+          </div>
 
           
                </div>   
@@ -338,6 +343,8 @@
 
     const aaa = ref('detial')
 
+    const isAuth = ref(false)
+
     const isLoading = ref(true);
     const articles = ref([]);
     const articleUser = ref('');
@@ -363,11 +370,15 @@ const showMain = (index)=>{
     const fetchUserData = async () => {
 
       const a = sessionStorage.getItem('userId')
+      if(a){
 
-      const rep = await axiosGet('http://localhost:8080/user/findFollowingUsersByFollowing',{withCredentials:true,params:{userId:a,following:userId}})
-      console.log(rep);
-      isFav.value = rep
-      console.log(isFav.value);
+        const rep = await axiosGet('http://localhost:8080/user/findFollowingUsersByFollowing',{withCredentials:true,params:{userId:a,following:userId}})
+        console.log(rep);
+        isFav.value = rep
+        console.log(isFav.value);
+        isAuth.value = true
+
+      }
 
       const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
         user.value =response
