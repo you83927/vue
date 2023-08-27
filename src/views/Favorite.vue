@@ -401,7 +401,7 @@ const fetchData = async (tab) => {
       //  console.log(activeTab.value);
     if (tab === 'article') {
 
-      response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true ,params:{userId:a,title:'',page:0,size:4}});
+      response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true ,params:{userId:a,title:'',page:0,size:3}});
       console.log(response);   
       isLoading.value = false;
       articles.value = response.content;
@@ -610,7 +610,7 @@ const handleScroll =async (tab) => {
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
     // console.log(isAtBottom);
     // console.log(isLoading.value);
-    if (isAtBottom && !isLoading.value) {
+    if (isAtBottom && !isLoading.value && list.scrollTop != 0) {
       isLoading.value = true; 
       try {
         console.log(tab);

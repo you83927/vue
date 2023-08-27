@@ -210,13 +210,17 @@ const searchUsername = async()=>{
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
+      // 清空已加载的数据和页码
+      followers.value = [];
+  items.value = { pageNumber: 0 };
+
   searchTimeout = setTimeout(async () => {
     const a = sessionStorage.getItem('userId')
     console.log(a);
  const response = await axiosGet('http://localhost:8080/user/findOtherUsersInFollowerPage',{withCredentials:true, params:{userName:input1.value,id:a,page:0,size:6}})
 console.log(response);
 
- followers.value = response;
+ followers.value = response.content;
     // user.value = response;
     
     // isLoading.value = false;

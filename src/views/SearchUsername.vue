@@ -129,11 +129,12 @@ onMounted(() => {
 });
 
 const handleScroll =async () => {
+  
   const list = dataList.value;
   if (list) {
     const threshold = 10;
     const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
-    if (isAtBottom && !isLoading.value) {
+    if (isAtBottom && !isLoading.value && list.scrollTop != 0) {
 
 
 
