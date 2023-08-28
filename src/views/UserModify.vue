@@ -78,7 +78,7 @@
             </div>
 
             <div class="col-12">
-              <label for="nickName" class="form-label">暱稱</label>
+              <label for="nickName" class="form-label">暱稱<span class="text-body-secondary">(選填)</span></label>
               <input type="text" class="form-control" id="nickName" v-model.trim="user.nickname" placeholder="" required>
               <div class="invalid-feedback">
                 Please enter your shipping address.
@@ -141,19 +141,20 @@
     </div>
   </main>
 
-  <footer class="my-5 pt-5 text-body-secondary text-center text-small">
+  <!-- <footer class="my-5 pt-5 text-body-secondary text-center text-small">
     <p class="mb-1">&copy; 2017–2023 Company Name</p>
     <ul class="list-inline">
       <li class="list-inline-item"><a href="#">Privacy</a></li>
       <li class="list-inline-item"><a href="#">Terms</a></li>
       <li class="list-inline-item"><a href="#">Support</a></li>
     </ul>
-  </footer>
+  </footer> -->
 </div>
 </template>
 
 <script setup>
     import { ref ,computed} from 'vue';
+    import { useStore } from 'vuex';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
     import {axiosPost,axiosGet,axiosPut,swalError} from '../global'
@@ -224,7 +225,11 @@ const handleGenderChange = (selectedGender) => {
 // });
 
 //更新
+// const store = useStore();
+console.log(useStore);
 const modify = async () => {
+      // const updatedInfo = '新的資訊'; // 根據實際情況更新資訊
+      // store.dispatch('setUpdatedInfo', updatedInfo);
   console.log(123);
   const updateUser = user.value
 
@@ -243,10 +248,14 @@ if(photo.value ==null || photo.value == "/img/noImage.jpg"){
 const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
 
 if(response=="更新成功"){
+
+  
+
+
   window.setTimeout(function () {
-             window.location.reload();
-            },1000)
-            router.push({path:"/userDetial"})
+    window.location.reload();
+  } ,1000)
+    router.push({path:"/userDetial"})
   
 }
   // return error

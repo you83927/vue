@@ -77,7 +77,7 @@ const login = async  () => {
 
   try {
   const response = await axiosPost('http://localhost:8080/user/login', user, {withCredentials:true})
-  if (response === 'login success') {
+  if (response === '登入成功') {
     // localStorage.setItem('user', JSON.stringify(user))
    
     console.log(response);

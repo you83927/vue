@@ -142,7 +142,7 @@
       v-model="Rinput"
       class="w-50 m-2"
       size="large"
-      placeholder="Please Input"
+      placeholder="搜尋食記/食譜"
       :prefix-icon="Search"
       @input="searchRestaurant(bbb)"
       /> 
@@ -159,9 +159,9 @@
                 
     <el-card class="box-card" :id="'heading-' + article[0].id" >
       
-      <!-- <div class="" >
-        <el-button type="info" plain  @click="deleteFavoriteArticle(article[0].id)" style="float: right;" :icon="Delete"/>
-      </div> -->
+      <div class="" >
+        <el-button type="info" plain  @click="addFavoriteArticle(article[0].id)" style="float: right;" :icon="Plus"/>
+      </div>
       
       
       <div class="card-header"  style="display: flex;">
@@ -237,9 +237,9 @@
                 
     <el-card class="box-card" :id="'heading-' + article[0].id" >
       
-      <!-- <div class="" >
-        <el-button type="info" plain  @click="deleteFavoriteArticle(article[0].id)" style="float: right;" :icon="Delete"/>
-      </div> -->
+      <div class="" >
+        <el-button type="info" plain  @click="addFavoriteArticle(article[0].id)" style="float: right;" :icon="Plus"/>
+      </div>
       
       
       <div class="card-header"  style="display: flex;">
@@ -318,7 +318,7 @@
         import { useRouter } from 'vue-router';
         import {axiosPost,axiosGet,axiosDelete, swalSuccess} from '../global'
 
-         import { Search,Delete } from '@element-plus/icons-vue'
+         import { Search,Delete,Plus } from '@element-plus/icons-vue'
         const buttons = [
   { type: '', text: 'plain' },
  
@@ -629,6 +629,23 @@ showMain("detial")
     } else {
    }
 };
+
+
+const addFavoriteArticle = async(aId)=>{
+  if(aId!=null){
+    const confirmed = window.confirm("确定要加入吗？");
+    if (confirmed){
+
+      const a = sessionStorage.getItem('userId')
+      console.log(a);
+      console.log(aId);
+      // const response = await axiosDelete('http://localhost:8080/user/delete/article',{withCredentials:true,params:{userId:a,articleId:aId}})
+       window.setTimeout(function () {
+             window.location.reload();
+      },1000)
+    }  
+  }
+}
     
     </script>
         

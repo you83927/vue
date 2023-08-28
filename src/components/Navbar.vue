@@ -29,6 +29,9 @@
             <li> <router-link class="dropdown-item" to="/follower">追蹤中用戶</router-link></li>
             <li><router-link class="dropdown-item" to="/favorite">最愛</router-link></li>
              <li><router-link class="dropdown-item" to="/searchUsername">搜尋所有使用者</router-link></li>
+             <li><router-link class="dropdown-item" to="/notify">通知</router-link></li>
+             
+             
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" @click="logOut">登出</a></li>
           </ul>

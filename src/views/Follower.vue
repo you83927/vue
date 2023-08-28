@@ -5,7 +5,7 @@
       v-model="input1"
       class="w-50 m-2"
       size="large"
-      placeholder="Please Input"
+      placeholder="搜尋跟蹤用戶"
       :prefix-icon="Search"
       @input="searchUsername"
     />

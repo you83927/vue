@@ -59,6 +59,7 @@ import UserModify from "./views/UserModify.vue"
 import PrivacySetting from "./views/PrivacySetting.vue"
 import OtherUsers from "./views/OtherUsers.vue"
 import SearchUsername from "./views/SearchUsername.vue"
+import Notify from "./views/Notify.vue"
 const routers=[
     {
         path:'/helloVue',
@@ -114,6 +115,11 @@ const routers=[
         path:'/searchUsername',
         name:'SearchUsername',  
         component:SearchUsername
+    },{
+        
+        path:'/notify',
+        name:'Notify',  
+        component:Notify
     }
 
     

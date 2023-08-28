@@ -1,15 +1,15 @@
 <template>
-       <h2>Favorite</h2>
+       <h2 class="m-3">我的最愛</h2>
 <!-- 標籤 -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="article" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" @click="changeTab('article')">Article</button>
+    <button class="nav-link active" id="article" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" @click="changeTab('article')">文章</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="restaurant" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" @click="changeTab('restaurant')">Restaurant</button>
+    <button class="nav-link" id="restaurant" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" @click="changeTab('restaurant')">餐廳</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="food" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" @click="changeTab('food')">Food</button>
+    <button class="nav-link" id="food" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" @click="changeTab('food')">食物</button>
   </li>
 </ul>
 
@@ -21,7 +21,7 @@
       v-model="Rinput"
       class="w-50 m-2"
       size="large"
-      placeholder="Please Input"
+      placeholder="搜尋文章"
       :prefix-icon="Search"
       @input="searchRestaurant(activeTab)"
       /> 
@@ -126,7 +126,7 @@
     v-model="Rinput"
     class="w-50 m-2"
     size="large"
-    placeholder="Please Input"
+    placeholder="搜尋餐廳"
     :prefix-icon="Search"
     @input="searchRestaurant(activeTab)"
   /> 
@@ -305,7 +305,7 @@
     v-model="Rinput"
     class="w-50 m-2"
     size="large"
-    placeholder="Please Input"
+    placeholder="搜尋食物"
     :prefix-icon="Search"
     @input="searchRestaurant(activeTab)"
   /> 
@@ -395,6 +395,7 @@ onMounted( () => {
 
 // 在组件加载时获取文章数据
 const fetchData = async (tab) => {
+
   const a = sessionStorage.getItem('userId')
   try {
        let response;
@@ -492,8 +493,8 @@ const deleteFavoriteArticle = async(aId)=>{
       console.log(aId);
       const response = await axiosDelete('http://localhost:8080/user/favorite/delete/article',{withCredentials:true,params:{userId:a,articleId:aId}})
        window.setTimeout(function () {
-             window.location.reload();
-      },1000)
+            //  window.location.reload();
+      },changeTab("article"),1000)
     }  
   }
 }
@@ -511,8 +512,8 @@ const deleteFavoriteRestaurant = async(rId)=>{
       console.log(rId);
       const response = await axiosDelete('http://localhost:8080/user/favorite/delete/restaurant',{withCredentials:true,params:{userId:a,restaurantId:rId}})
        window.setTimeout(function () {
-             window.location.reload();
-      },1000)
+            //  window.location.reload();
+      },changeTab("restaurant"),1000)
     }  
   }
 }
@@ -529,8 +530,8 @@ const deleteFavoriteFoodType = async(fId)=>{
       console.log(fId);
       const response = await axiosDelete('http://localhost:8080/user/favorite/delete/food',{withCredentials:true,params:{userId:a,foodId:fId}})
        window.setTimeout(function () {
-             window.location.reload();
-      },1000)
+            //  window.location.reload();
+      },changeTab("food"),1000)
     }  
   }
 }

@@ -46,12 +46,6 @@
          
         </el-menu>
       </el-scrollbar>
-
-
-
-
-
-
       </el-aside>
       <el-main>
         <div v-if="aaa=='detial'">
@@ -90,7 +84,7 @@
           Loading user data...
 </div>
 <el-button type="info" plain class="btn btn-info m-3"  @click="showModify">編輯基本資料</el-button>
-<el-button type="warning" plain class="btn btn-info" @click="showPrivacySetting">更改密碼</el-button>
+<!-- <el-button type="warning" plain class="btn btn-info" @click="showPrivacySetting">更改密碼</el-button> -->
 
 </div>
 
@@ -102,7 +96,7 @@
       v-model="Rinput"
       class="w-50 m-2"
       size="large"
-      placeholder="Please Input"
+      placeholder="搜尋食記/食譜"
       :prefix-icon="Search"
       @input="searchRestaurant(bbb)"
       /> 
@@ -313,6 +307,8 @@
     let searchTimeout = null;
 
     
+
+    
     const fetchUserData = async () => {
       const a = sessionStorage.getItem('userId')
       
@@ -389,11 +385,13 @@ const deleteFavoriteArticle = async(aId)=>{
       console.log(a);
       console.log(aId);
       const response = await axiosDelete('http://localhost:8080/user/delete/article',{withCredentials:true,params:{userId:a,articleId:aId}})
+      console.log(response);
        window.setTimeout(function () {
-             window.location.reload();
-      },1000)
+        // window.location.reload();
+            },showMain('article'),1000)
     }  
   }
+  
 }
 
 const searchRestaurant = async(type)=>{ 
