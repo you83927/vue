@@ -313,7 +313,6 @@
     const fetchUserData = async () => {
       const a = sessionStorage.getItem('userId')
    
-      console.log(a);
       const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
       user.value =response
     // console.log(user.value.photo);
@@ -321,7 +320,6 @@
         photo.value ="/img/noImage.jpg"
       }else{
         photo.value = decodeURIComponent(atob(user.value.photo))
-        console.log(photo.value);
       }
       changeType(1)
 
@@ -358,12 +356,10 @@ const changeType = async (type)=>{
   Rinput.value = ''; // 清空搜索字段
   articles.value = []; // 清空已加载的数据
   const  response1 = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:'',type:type,page:0,size:4}});
-      console.log(response1);   
       isLoading.value = false;
       articles.value = response1.content;
       articlesitems.value = response1.pageable
       articles.value.forEach((article)=>{
-        console.log(article[1].username);
       articleUser.value = article[1]
       // console.log(decodeURIComponent(atob(article[1].photo)));
       if(article[1].photo==null){
@@ -399,10 +395,7 @@ const deleteFavoriteArticle = async(aId)=>{
     if (confirmed){
 
       const a = sessionStorage.getItem('userId')
-      console.log(a);
-      console.log(aId);
       const response = await axiosDelete('http://localhost:8080/user/delete/article',{withCredentials:true,params:{userId:a,articleId:aId}})
-      console.log(response);
        window.setTimeout(function () {
         // window.location.reload();
             },showMain('article'),1000)
@@ -412,7 +405,6 @@ const deleteFavoriteArticle = async(aId)=>{
 }
 
 const searchRestaurant = async(type)=>{ 
-  console.log(type);
   if (searchTimeout ) {
     clearTimeout(searchTimeout);
   }
@@ -425,10 +417,8 @@ const searchRestaurant = async(type)=>{
     const a = sessionStorage.getItem('userId')
     const  response = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:Rinput.value,type:type,page:0,size:4}});
     //  const  response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle', { withCredentials: true, params: { userId: a, title: Rinput.value, page: 0, size: 3 } });
-     console.log(response.content);
       articles.value = response.content;
       articles.value.forEach((article)=>{
-        console.log(article[1].username);
       articleUser.value = article[1]
       // console.log(decodeURIComponent(atob(article[1].photo)));
       if(article[1].photo==null){
@@ -456,27 +446,16 @@ const searchRestaurant = async(type)=>{
 
 const handleScroll =async (type) => {
   const a = sessionStorage.getItem('userId')
-  // console.log(type);
   x.value = !type?(type==0?type:1):(type==0?type:1)
-  // console.log(x.value);
   const list = AdataList.value;
 if (list) {
-  // console.log(list);
   const threshold = 10;
   const isAtBottom =list.scrollTop + list.clientHeight + threshold >= list.scrollHeight;
-  // console.log(isAtBottom);
-  // console.log(isLoading.value);
   if (isAtBottom && !isLoading.value) {
     isLoading.value = true; 
     try {
           const pageToLoad = articlesitems.value.pageNumber++
-          // console.log(pageToLoad);
-          // console.log(a);
-          // console.log(Rinput.value);
-          console.log(x.value);
           const response = await axiosGet('http://localhost:8080/user/findArticlceByUserId',{withCredentials:true ,params:{userId:a,title:Rinput.value,type:x.value,page:pageToLoad+1,size:4}});
-          // const response = await axiosGet('http://localhost:8080/user/favorite/articlesByTitle',{withCredentials:true, params:{userId:a,title:Rinput.value,page: pageToLoad+1,size:3}})
-          console.log(response);
           // articles.value = response.content;
        
           
@@ -505,9 +484,7 @@ if (list) {
           }
           return article;
         });
-        console.log(newArticles);
      articles.value = [...articles.value,...newArticles]; 
-          console.log(articles.value);
           // articles.value = [];
           // articlesitems.value = { pageNumber: 0 };
 
@@ -612,7 +589,6 @@ const goToOrderUser = async(userId)=>{
 
 const response = await axiosPost('http://localhost:8080/user/findOtherUsersById/'+userId,{withCredentials:true})
 
-console.log(response);
 showMain("detial")
 }
 

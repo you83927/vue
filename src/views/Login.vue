@@ -72,6 +72,8 @@ const users = ref({
 });
 const photo = ref("")
 const login = async  () => {
+  console.log(store);
+  
     const user = {
   username: username.value,
   password: password.value
@@ -82,7 +84,6 @@ const login = async  () => {
   if (response === '登入成功') {
     // localStorage.setItem('user', JSON.stringify(user))
 
-    console.log(response);
     // swalSuccess(response)
     
     // return response
@@ -103,9 +104,7 @@ const login = async  () => {
         photo.value ="/img/noImage.jpg"
       }else{
         photo.value = decodeURIComponent(atob(users.value.photo))
-        console.log(users.value);
       }
-      console.log(users.value);
       sessionStorage.setItem('userId',users.value.id)
       sessionStorage.setItem('userUsername',users.value.userName)
       sessionStorage.setItem('userNickname',users.value.nickName)
@@ -114,8 +113,8 @@ const login = async  () => {
       const b = sessionStorage.getItem('userUsername')
       const c = sessionStorage.getItem('userNickname')
       
-      store.commit('setCurrentUser', a);
-      console.log(store.state);
+      store.commit('login', users.value);
+      console.log(store.state.loggedInUser);
      router.push({ path: '/userDetial' });
     // .then((res) => {
     //   console.log(res);

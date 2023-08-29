@@ -173,12 +173,6 @@ const updateUser=ref("")
 
 const store = useStore();
 
-// 使用mapGetters來獲取getter中的狀態
-const { getInformation } = mapGetters(['getInformation']);
-
-// 使用mapActions來調用actions來更新狀態
-const { setInformation } = mapActions(['setInformation']);
-
 
 
 const handleGenderChange = (selectedGender) => {
@@ -237,7 +231,7 @@ const handleGenderChange = (selectedGender) => {
 
 
 const modify = async () => {
-      // const updatedInfo = '新的資訊'; // 根據實際情況更新資訊
+  
   
   console.log(123);
    updateUser.value= user.value
@@ -258,14 +252,14 @@ const response = await axiosPut('http://localhost:8080/user/modify', updateUser.
 
 if(response=="更新成功"){
 
-  const result = await store.dispatch('setInformation', updateUser.value);
-  console.log(result); // 打印返回的值
+  // const result = await store.dispatch('updateHistory', updateUser.value);
+  // console.log(result); // 打印返回的值
 showNotification()
 
-  // window.setTimeout(function () {
-  //   window.location.reload();
-  // } ,1000)
-  //   router.push({path:"/userDetial"})
+  window.setTimeout(function () {
+    window.location.reload();
+  } ,1000)
+    router.push({path:"/userDetial"})
   
 }
   // return error

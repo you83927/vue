@@ -148,11 +148,11 @@ const isUserLoggedIn=()=>{
 
 
 
-// 检查 localStorage 是否有保存的用户信息
-const savedUser = localStorage.getItem('currentUser');
-if (savedUser) {
-  store.dispatch('login', JSON.parse(savedUser));
-}
+// // 检查 localStorage 是否有保存的用户信息
+// const savedUser = localStorage.getItem('currentUser');
+// if (savedUser) {
+//   store.dispatch('login', JSON.parse(savedUser));
+// }
 
 
 

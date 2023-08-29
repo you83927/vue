@@ -56,11 +56,8 @@
 
     onMounted (async () => {
       
-      console.log(123);
   const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     user.value =response
-    console.log(response);
-    // console.log(user.value.photo);
     if(response==null){
       return swalError(response)
     }
@@ -68,14 +65,12 @@
         photo.value ="/img/noImage.jpg"
       }else{
         photo.value = decodeURIComponent(atob(user.value.photo))
-        // console.log(photo.value);
       }
     });
 
    
     const logOut =async () => {
     const response= await axiosPost('http://localhost:8080/user/logout',{},{withCredentials:true})
-      // console.log(response);
 
       if(response=='登出成功'){
         sessionStorage.removeItem('userId')

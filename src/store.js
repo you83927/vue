@@ -1,3 +1,47 @@
+
+import { createStore } from 'vuex';
+const store = createStore({
+  state: {
+    loggedInUser: null,
+    users: {}, // 保存每个用户的历史记录
+  },
+  mutations: {
+    login(state, user) {
+      state.loggedInUser = user;
+      if (!state.users[user]) {
+        state.users[user] = [];
+      }
+    },
+    updateHistory(state, payload) {
+      const { user, info } = payload;
+      state.users[user].push(info);
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
+  },
+  actions: {
+    loginUser({ commit }, user) {
+      commit('login', user);
+    },
+    setInformation({ commit, state }, info) {
+      const user = state.loggedInUser;
+      commit('updateHistory', { user, info });
+    },
+  },
+  getters: {
+    getUpdateHistory(state) {
+      const user = state.loggedInUser;
+      return state.users[user] || [];
+    },
+  },
+});
+
+export default store;
+
+
+
+
+
+
 // // store.js
 
 // import { createStore } from 'vuex';
@@ -79,47 +123,47 @@
 
 
 
-// store.js
+// // store.js
 
-import { createStore } from 'vuex';
+// import { createStore } from 'vuex';
 
-const store = createStore({
-  state: {
-    information: '',
-    updateHistory: JSON.parse(localStorage.getItem('updateHistory')) || [],
+// const store = createStore({
+//   state: {
+//     information: '',
+//     updateHistory: JSON.parse(localStorage.getItem('updateHistory')) || [],
  
-    updateHistoryChanged: false // 标志，表示更新历史是否发生变化
-  },
-  mutations: {
-    updateInformation(state, payload) {
-      state.information = payload;
-      state.updateHistory.push(payload); // 将更新记录添加到数组中
-      state.updateHistoryChanged = true;
-      localStorage.setItem('updateHistory', JSON.stringify(state.updateHistory)); // 将更新历史保存到localStorage
+//     updateHistoryChanged: false // 标志，表示更新历史是否发生变化
+//   },
+//   mutations: {
+//     updateInformation(state, payload) {
+//       state.information = payload;
+//       state.updateHistory.push(payload); // 将更新记录添加到数组中
+//       state.updateHistoryChanged = true;
+//       localStorage.setItem('updateHistory', JSON.stringify(state.updateHistory)); // 将更新历史保存到localStorage
  
-    },
-    clearUpdateHistoryChanged(state) {
-      state.updateHistoryChanged = false; // 重置更新历史变化标志
-    }
-  },
-  actions: {
-    async setInformation({ commit }, payload) {
-      commit('updateInformation', payload);
-      return 'Information updated successfully';
-    },
-    clearUpdateHistoryChanged({ commit }) {
-      commit('clearUpdateHistoryChanged');
-    }
-  },
-  getters: {
-    getInformation: state => state.information,
-    getUpdateHistory: state => state.updateHistory, // 获取更新记录数组的 getter
-    isUpdateHistoryChanged: state => state.updateHistoryChanged // 获取更新历史变化标志的 getter
+//     },
+//     clearUpdateHistoryChanged(state) {
+//       state.updateHistoryChanged = false; // 重置更新历史变化标志
+//     }
+//   },
+//   actions: {
+//     async setInformation({ commit }, payload) {
+//       commit('updateInformation', payload);
+//       return 'Information updated successfully';
+//     },
+//     clearUpdateHistoryChanged({ commit }) {
+//       commit('clearUpdateHistoryChanged');
+//     }
+//   },
+//   getters: {
+//     getInformation: state => state.information,
+//     getUpdateHistory: state => state.updateHistory, // 获取更新记录数组的 getter
+//     isUpdateHistoryChanged: state => state.updateHistoryChanged // 获取更新历史变化标志的 getter
  
-  }
-});
+//   }
+// });
 
-export default store;
+// export default store;
 
 
 
