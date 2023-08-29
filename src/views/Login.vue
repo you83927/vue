@@ -58,9 +58,11 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import {axiosPost,axiosGet,axiosPut,swalSuccess} from '../global'
+import { useStore,mapGetters } from 'vuex';
 
 const URL = import.meta.env.VITE_API_JAVAURL
 
+const store = useStore();
 const username = ref('');
 const password = ref('');
 
@@ -79,7 +81,7 @@ const login = async  () => {
   const response = await axiosPost('http://localhost:8080/user/login', user, {withCredentials:true})
   if (response === '登入成功') {
     // localStorage.setItem('user', JSON.stringify(user))
-   
+
     console.log(response);
     // swalSuccess(response)
     
@@ -95,6 +97,7 @@ const login = async  () => {
 
   const response1 = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
     users.value =response1
+    
     // console.log(user.value.photo);
       if(users.value.photo==null){
         photo.value ="/img/noImage.jpg"
@@ -107,10 +110,12 @@ const login = async  () => {
       sessionStorage.setItem('userUsername',users.value.userName)
       sessionStorage.setItem('userNickname',users.value.nickName)
 
-     const a = sessionStorage.getItem('userId')
-     const b = sessionStorage.getItem('userUsername')
-     const c = sessionStorage.getItem('userNickname')
-
+      const a = sessionStorage.getItem('userId')
+      const b = sessionStorage.getItem('userUsername')
+      const c = sessionStorage.getItem('userNickname')
+      
+      store.commit('setCurrentUser', a);
+      console.log(store.state);
      router.push({ path: '/userDetial' });
     // .then((res) => {
     //   console.log(res);

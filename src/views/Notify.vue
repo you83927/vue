@@ -19,10 +19,16 @@
         <el-main>
 
             <div v-if="aaa=='detial'">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">An item</li>
-                <!-- <p>更新的資訊：{{ getUpdatedInfo() }}</p> -->
-        
+            <ul class="list-group list-group-flush" >
+            
+                <li v-for="update in updatedFields" :key="update">
+                  <!-- {{ update }} -->
+                  {{ update.email ? 'Email 已更新为 ' + update.email : '' }}
+        {{ update.nickname ? 'Nickname 已更新为 ' + update.nickname : '' }}
+    
+                
+                </li>
+                    
             </ul>
             </div>
 
@@ -243,7 +249,7 @@
     
 <script setup>
      import { ref, onMounted,computed ,nextTick} from 'vue';
-     import { useStore } from 'vuex';
+     import { useStore,mapGetters } from 'vuex';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
     import {axiosPost,axiosGet,axiosPut,axiosDelete} from '../global'
@@ -256,6 +262,21 @@
   Tickets,
   User,
 } from '@element-plus/icons-vue'
+
+
+    const store = useStore();
+const updateHistory = store.getters.getUpdateHistory;
+const isUpdateHistoryChanged = store.getters.isUpdateHistoryChanged;
+const updatedFields = store.getters.getUpdateHistory;
+
+if (isUpdateHistoryChanged) {
+  
+  // 如果更新历史有变化，执行展示更新历史的操作
+  // 并且在展示完后调用 clearUpdateHistoryChanged 来重置标志
+  store.dispatch('clearUpdateHistoryChanged');
+}
+      console.log(updateHistory);
+
 
 const aaa = ref('detial')
     const bbb = ref(1)
@@ -299,7 +320,9 @@ const addFollowingUser = ref({
 }
 
 const fetchUserData = async () => {
-
+  // const result =  store.dispatch('getInformation');
+  // console.log(result);
+// getInformation
     const a = sessionStorage.getItem('userId')
       
       console.log(a);

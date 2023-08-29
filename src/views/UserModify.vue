@@ -154,7 +154,7 @@
 
 <script setup>
     import { ref ,computed} from 'vue';
-    import { useStore } from 'vuex';
+    import { useStore,mapGetters, mapActions } from 'vuex';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
     import {axiosPost,axiosGet,axiosPut,swalError} from '../global'
@@ -168,6 +168,17 @@
 const photoUrl = ref('')
 
 const photo = ref("")
+
+const updateUser=ref("")
+
+const store = useStore();
+
+// 使用mapGetters來獲取getter中的狀態
+const { getInformation } = mapGetters(['getInformation']);
+
+// 使用mapActions來調用actions來更新狀態
+const { setInformation } = mapActions(['setInformation']);
+
 
 
 const handleGenderChange = (selectedGender) => {
@@ -224,43 +235,59 @@ const handleGenderChange = (selectedGender) => {
 //   }
 // });
 
-//更新
-// const store = useStore();
-console.log(useStore);
+
 const modify = async () => {
       // const updatedInfo = '新的資訊'; // 根據實際情況更新資訊
-      // store.dispatch('setUpdatedInfo', updatedInfo);
+  
   console.log(123);
-  const updateUser = user.value
+   updateUser.value= user.value
 
 if(photo.value ==null || photo.value == "/img/noImage.jpg"){
   console.log(photo.value);
-  updateUser.photo = ""
+  updateUser.value.photo = ""
 }else {
-  updateUser.photo = btoa(photoUrl.value)
+  updateUser.value.photo = btoa(photoUrl.value)
   }
 
   if(user.value.birthday==null || user.value.birthday==""){
-    updateUser.birthday = '0001-01-01'
+    updateUser.value.birthday = '0001-01-01'
   }
 
-  console.log(updateUser.birthday);
-const response = await axiosPut('http://localhost:8080/user/modify',updateUser ,{withCredentials:true});
+  console.log( updateUser.value.birthday);
+const response = await axiosPut('http://localhost:8080/user/modify', updateUser.value ,{withCredentials:true});
 
 if(response=="更新成功"){
 
-  
+  const result = await store.dispatch('setInformation', updateUser.value);
+  console.log(result); // 打印返回的值
+showNotification()
 
-
-  window.setTimeout(function () {
-    window.location.reload();
-  } ,1000)
-    router.push({path:"/userDetial"})
+  // window.setTimeout(function () {
+  //   window.location.reload();
+  // } ,1000)
+  //   router.push({path:"/userDetial"})
   
 }
   // return error
 }
 
+
+const showNotification = () => {
+  const updatedFields = [];
+
+  if (updateUser.value.username !== user.value.username) {
+    updatedFields.push('Username');
+  }
+  if (updateUser.value.email !== user.value.email) {
+    updatedFields.push('Email');
+  }
+  // 添加其他需要检查更新的字段
+
+  if (updatedFields.length > 0) {
+    alert(`已更新：${updatedFields.join(', ')}`)
+    // ElMessage.success(`已更新：${updatedFields.join(', ')}`);
+  }
+}
 
 // const handlePhotoChange = (event) => {
 //   const selectedFile = event.target.files[0];

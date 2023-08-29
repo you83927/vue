@@ -277,6 +277,7 @@
     import axios from 'axios';
     import { useRouter } from 'vue-router';
     import {axiosPost,axiosGet,axiosPut,axiosDelete} from '../global'
+    import Swal from 'sweetalert2';
     import {
   Search,
   Iphone,
@@ -286,6 +287,7 @@
   Tickets,
   User,
 } from '@element-plus/icons-vue'
+
     
     const URL = import.meta.env.VITE_API_JAVAURL
     
@@ -306,12 +308,11 @@
     const isLoading = ref(true);
     let searchTimeout = null;
 
-    
 
     
     const fetchUserData = async () => {
       const a = sessionStorage.getItem('userId')
-      
+   
       console.log(a);
       const response = await axiosGet('http://localhost:8080/user/detial', {withCredentials:true});
       user.value =response
@@ -378,7 +379,23 @@ const changeType = async (type)=>{
 
 const deleteFavoriteArticle = async(aId)=>{
   if(aId!=null){
-    const confirmed = window.confirm("确定要删除吗？");
+
+    Swal.fire({
+  title: '确定要删除吗？',
+  // showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: '確定',
+  // denyButtonText: `Don't save`,
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+    Swal.fire('已刪除!', '', 'success')
+  } else if (result.isDenied) {
+    Swal.fire('Changes are not saved', '', 'info')
+  }
+})
+
+    // const confirmed = window.confirm("确定要删除吗？");
     if (confirmed){
 
       const a = sessionStorage.getItem('userId')

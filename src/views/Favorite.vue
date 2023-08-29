@@ -178,7 +178,7 @@
           google map連結
         </div>
       </template>
-      <a :href="restaurant.url"><i class='bx bx-map-alt bx-sm' ></i></a>
+      <a :href="restaurant.url" target="_blank"><i class='bx bx-map-alt bx-sm' ></i></a>
     </el-descriptions-item>
 
 
@@ -244,7 +244,7 @@
           店家官網
         </div>
       </template>
-      <a :href="restaurant.website">{{ restaurant.website }}</a>
+      <a :href="restaurant.website" target="_blank">{{ restaurant.website }}</a>
       
     </el-descriptions-item>
     <!-- <el-descriptions-item>
@@ -322,15 +322,15 @@
       :span="5"
       class="m-3"
     >
-      <el-card  :body-style="{ padding: '10px' }" >
-        <el-button type="info" plain style="float: right;" :icon="Delete"  @click="deleteFavoriteFoodType(food.id)" />
+      <el-card  :body-style="{ padding: '10px' }"  @click="gofoodType(food.foodType)" style="cursor: pointer;">
+        <el-button type="info" plain style="float: right;" :icon="Delete"  @click.stop="deleteFavoriteFoodType(food.id)" />
         <img
           :src="'public/foodImage/'+food.id+'.jpg'"
           class="image"
-        
+         
         />
         <div style="padding: 10px">
-          <a href="" >
+          <a   >
             <span>{{ food.foodType }}</span>
           </a>
           <div class="bottom">
@@ -740,6 +740,18 @@ const gotoRestaurant = (restaurantName)=>{
     })
 
 
+}
+
+
+const gofoodType = (foodType)=>{
+  console.log(foodType);
+  // router.push({
+  //     path:"/search-restaurant",
+  //     query:{
+  //           page: 1,
+  //           foodType:foodType
+  //     }
+  //   })
 }
 
 </script>

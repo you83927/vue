@@ -36,6 +36,7 @@ import {
   faRotateLeft,
   faPizzaSlice
 } from "@fortawesome/free-solid-svg-icons";
+import store from './store';
 
 
 /* add icons to the library */
@@ -109,17 +110,20 @@ const routers=[
     {
         path:'/otherUsers/:userId',
         name:'OtherUsers',
-        component:OtherUsers
+        component:OtherUsers,
+        meta: { requiresAuth: true }
     },
     {
         path:'/searchUsername',
         name:'SearchUsername',  
-        component:SearchUsername
+        component:SearchUsername,
+        meta: { requiresAuth: true }
     },{
         
         path:'/notify',
         name:'Notify',  
-        component:Notify
+        component:Notify,
+        meta: { requiresAuth: true }
     }
 
     
@@ -134,16 +138,28 @@ const router = createRouter({
 
 const isUserLoggedIn=()=>{
     let a =  sessionStorage.getItem('userId')
-    // console.log(a);
+    console.log(a);
     if(a!=null){
         return true
     }
     return false
 
 }
+
+
+
+// 检查 localStorage 是否有保存的用户信息
+const savedUser = localStorage.getItem('currentUser');
+if (savedUser) {
+  store.dispatch('login', JSON.parse(savedUser));
+}
+
+
+
 // 設置全局的路由守衛
 router.beforeEach((to, from, next) => {
     // console.log(isUserLoggedIn());
+    console.log(isUserLoggedIn());
     if (to.meta.requiresAuth && isUserLoggedIn()==false) {
       // 如果路由需要登入，但用戶未登入，將其重定向到登入頁面
       next({ path: '/' }); // 將 "/login" 換成您的登入頁面路徑
@@ -167,6 +183,7 @@ createApp(App)
   .use(LoadingPlugin)
   .use(ElementPlus)
   .use(ElementPlus)
+  .use(store)
   
   .component("font-awesome-icon", FontAwesomeIcon)
   .component('VueDatePicker', VueDatePicker)

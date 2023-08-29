@@ -77,7 +77,7 @@
     const response= await axiosPost('http://localhost:8080/user/logout',{},{withCredentials:true})
       // console.log(response);
 
-      if(response=='logout ok'){
+      if(response=='登出成功'){
         sessionStorage.removeItem('userId')
       sessionStorage.removeItem('userUsername')
       sessionStorage.removeItem('userNickname')
